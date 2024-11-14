@@ -4,6 +4,7 @@ import { CartModel } from '../../data/models';
 
 type DefaultSlotContext = {
     hasErrors: boolean;
+    data: CartModel | null;
 };
 export interface CartProps extends HTMLAttributes<HTMLDivElement> {
     routeEmptyCartCTA?: () => string;
@@ -12,6 +13,13 @@ export interface CartProps extends HTMLAttributes<HTMLDivElement> {
         OrderSummary?: SlotProps<DefaultSlotContext>;
         ProductList?: SlotProps;
     };
+    showDiscount?: boolean;
+    showSavings?: boolean;
+    quantityType?: 'stepper' | 'dropdown';
+    dropdownOptions?: {
+        value: string;
+        text: string;
+    }[];
 }
 export declare const Cart: Container<CartProps, CartModel | null>;
 export {};

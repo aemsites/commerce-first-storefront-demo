@@ -18,7 +18,11 @@ export const calcEnvironment = () => {
   }
 
   const environmentFromConfig = window.sessionStorage.getItem('environment');
-  if (environmentFromConfig && ALLOWED_CONFIGS.includes(environmentFromConfig) && environment !== 'prod') {
+  if (
+    environmentFromConfig
+    && ALLOWED_CONFIGS.includes(environmentFromConfig)
+    && environment !== 'prod'
+  ) {
     return environmentFromConfig;
   }
 
@@ -37,16 +41,29 @@ function buildConfigURL(environment) {
 
 const getConfigForEnvironment = async (environment) => {
   const env = environment || calcEnvironment();
-  let configJSON = window.sessionStorage.getItem(`config:${env}`);
-  if (!configJSON) {
-    configJSON = await fetch(buildConfigURL(env));
+
+  try {
+    const configJSON = window.sessionStorage.getItem(`config:${env}`);
+    if (!configJSON) {
+      throw new Error('No config in session storage');
+    }
+
+    const parsedConfig = JSON.parse(configJSON);
+    if (!parsedConfig[':expiry'] || parsedConfig[':expiry'] < Math.round(Date.now() / 1000)) {
+      throw new Error('Config expired');
+    }
+
+    return parsedConfig;
+  } catch (e) {
+    let configJSON = await fetch(buildConfigURL(env));
     if (!configJSON.ok) {
       throw new Error(`Failed to fetch config for ${env}`);
     }
-    configJSON = await configJSON.text();
-    window.sessionStorage.setItem(`config:${env}`, configJSON);
+    configJSON = await configJSON.json();
+    configJSON[':expiry'] = Math.round(Date.now() / 1000) + 7200;
+    window.sessionStorage.setItem(`config:${env}`, JSON.stringify(configJSON));
+    return configJSON;
   }
-  return configJSON;
 };
 
 /**
@@ -58,8 +75,8 @@ const getConfigForEnvironment = async (environment) => {
  */
 export const getConfigValue = async (configParam, environment) => {
   const env = environment || calcEnvironment();
-  const configJSON = await getConfigForEnvironment(env);
-  const configElements = JSON.parse(configJSON).data;
+  const config = await getConfigForEnvironment(env);
+  const configElements = config.data;
   return configElements.find((c) => c.key === configParam)?.value;
 };
 
@@ -76,3 +93,5 @@ export const getCookie = (cookieName) => {
 
   return foundValue;
 };
+
+export const checkIsAuthenticated = () => !!getCookie('auth_dropin_user_token') ?? false;
