@@ -107,12 +107,6 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       url
       label
     }
-    url_key
-    url_suffix
-    categories {
-      url_path
-      url_key
-    }
     custom_attributesV2(filters: {is_visible_on_front: true}){
       items{
         code
@@ -124,13 +118,13 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
             value
             label
           }
-          
+
         }
       }
     }
     only_x_left_in_stock
-    stock_status     
-    
+    stock_status
+
     price_range {
       ...PRICE_RANGE_FRAGMENT
     }
@@ -163,15 +157,7 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       ...CUSTOMIZABLE_OPTIONS_FRAGMENT
     }
   }
-  ... on DownloadableCartItem {
-    links {
-      sort_order
-      title
-    }
-    customizable_options {
-      ...CUSTOMIZABLE_OPTIONS_FRAGMENT
-    }
-  }
+
   ... on BundleCartItem {
     bundle_options {
       uid
@@ -198,7 +184,7 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
 
 ${e}
 ${t}
-`,r=`
+`,n=`
 fragment CART_FRAGMENT on Cart {
   id
   total_quantity
@@ -237,9 +223,6 @@ fragment CART_FRAGMENT on Cart {
         currency
       }
       label
-      coupon {
-        code
-      }
       applied_to
     }
   }
@@ -267,4 +250,4 @@ fragment CART_FRAGMENT on Cart {
 }
 
 ${a}
-`;export{r as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};
+`;export{n as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};
