@@ -3,11 +3,8 @@ import { Address as AddressModel, CustomAttribute as CustomAttributeModel, Shipp
 
 type ShippingAddresses = NonNullable<GetCartQuery['cart']>['shipping_addresses'];
 type ShippingAddress = ShippingAddresses[0];
-type NonNullableShippingAddress = NonNullable<ShippingAddress>;
 type BillingAddress = NonNullable<GetCartQuery['cart']>['billing_address'];
-type NonNullableBillingAddress = NonNullable<BillingAddress>;
-type CustomAttributes = NonNullableShippingAddress['custom_attributes'] | NonNullableBillingAddress['custom_attributes'];
-export declare const transformCustomAttributes: (data: CustomAttributes) => CustomAttributeModel[];
+export declare const transformCustomAttributes: () => CustomAttributeModel[];
 declare const transformBillingAddress: (data: BillingAddress) => AddressModel | undefined;
 declare const transformShippingAddresses: (data: ({
     __typename?: "ShippingCartAddress" | undefined;

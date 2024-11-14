@@ -2,7 +2,6 @@
 All Rights Reserved. */
 const e=`
   fragment BILLING_CART_ADDRESS_FRAGMENT on BillingCartAddress {
-    id
     city
     country {
       code
@@ -20,16 +19,9 @@ const e=`
     }
     street
     telephone
-    custom_attributes {
-      ... on AttributeValue {
-        code
-        value
-      }
-    }
   }
 `,t=`
   fragment SHIPPING_CART_ADDRESS_FRAGMENT on ShippingCartAddress {
-    id
     firstname
     lastname
     company
@@ -47,12 +39,6 @@ const e=`
       label
     }
     telephone
-    custom_attributes {
-      ... on AttributeValue {
-        code
-        value
-      }
-    }
     available_shipping_methods {
       amount {
         currency
@@ -91,7 +77,6 @@ const e=`
         currency
       }
     }
-    same_as_billing
   }
 `,a=`
   fragment CHECKOUT_DATA_FRAGMENT on Cart {
