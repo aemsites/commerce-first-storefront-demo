@@ -74,6 +74,9 @@ import '../../scripts/initializers/auth.js';
 import '../../scripts/initializers/cart.js';
 import '../../scripts/initializers/checkout.js';
 
+// Adyen
+import {AdyenCheckout} from '@adyen/adyen-web/dist/es/index.js';
+
 export default async function decorate(block) {
   const DEBOUNCE_TIME = 1000;
   const LOGIN_FORM_NAME = 'login-form';

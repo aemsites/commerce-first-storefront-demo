@@ -220,6 +220,8 @@ async function loadEager(doc) {
     pageType = 'Cart';
   } else if (document.body.querySelector('main .commerce-checkout')) {
     pageType = 'Checkout';
+
+    await loadCSS('/scripts/adyen/adyen-web/styles/adyen.css');
   }
 
   window.adobeDataLayer.push(
