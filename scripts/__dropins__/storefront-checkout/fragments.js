@@ -2,6 +2,7 @@
 All Rights Reserved. */
 const e=`
   fragment BILLING_CART_ADDRESS_FRAGMENT on BillingCartAddress {
+    id
     city
     country {
       code
@@ -22,6 +23,7 @@ const e=`
   }
 `,t=`
   fragment SHIPPING_CART_ADDRESS_FRAGMENT on ShippingCartAddress {
+    id
     firstname
     lastname
     company
@@ -77,6 +79,7 @@ const e=`
         currency
       }
     }
+    same_as_billing
   }
 `,a=`
   fragment CHECKOUT_DATA_FRAGMENT on Cart {
