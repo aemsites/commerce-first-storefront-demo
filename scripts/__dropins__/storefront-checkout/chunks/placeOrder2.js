@@ -227,13 +227,6 @@ import{s as P,M as L,j as k,m as $,F as j,U as B}from"./fetch-graphql.js";import
           ...PRODUCT_FRAGMENT
         }
       }
-      ... on DownloadableOrderItem {
-        product_name
-        downloadable_links {
-          sort_order
-          title
-        }
-      }
     }
     total {
       ...ORDER_SUMMARY_FRAGMENT
@@ -260,4 +253,4 @@ import{s as P,M as L,j as k,m as $,F as j,U as B}from"./fetch-graphql.js";import
   }
 
   ${ue}
-`,w={SHOPPING_CART_CONTEXT:"shoppingCartContext",ORDER_CONTEXT:"orderContext"},oe={PLACE_ORDER:"place-order"};function U(){return window.adobeDataLayer=window.adobeDataLayer||[],window.adobeDataLayer}function S(e,n){const t=U();t.push({[e]:null}),t.push({[e]:n})}function _e(e,n){U().push(a=>{const r=a.getState?a.getState():{};a.push({event:e,eventInfo:{...r,...n}})})}function pe(e){const n=X(e),t=Y(e);S(w.SHOPPING_CART_CONTEXT,{...n}),S(w.ORDER_CONTEXT,{...t}),_e(oe.PLACE_ORDER)}function de(e){throw e.every(t=>{var a;return(a=t.extensions)==null?void 0:a.category})?new j(e):new B(e[0].message)}const Te=async()=>{const e=P.cartId;if(!e)throw new L;const{data:n,errors:t}=await k(le,{variables:{cartId:e}}).catch($);t&&de(t);const a=ee(n.placeOrder.orderV2);return pe(a),q.emit("checkout/order",a),q.emit("cart/reset",void 0),a};export{Te as p};
+`,S={SHOPPING_CART_CONTEXT:"shoppingCartContext",ORDER_CONTEXT:"orderContext"},oe={PLACE_ORDER:"place-order"};function U(){return window.adobeDataLayer=window.adobeDataLayer||[],window.adobeDataLayer}function w(e,n){const t=U();t.push({[e]:null}),t.push({[e]:n})}function _e(e,n){U().push(a=>{const r=a.getState?a.getState():{};a.push({event:e,eventInfo:{...r,...n}})})}function pe(e){const n=X(e),t=Y(e);w(S.SHOPPING_CART_CONTEXT,{...n}),w(S.ORDER_CONTEXT,{...t}),_e(oe.PLACE_ORDER)}function de(e){throw e.every(t=>{var a;return(a=t.extensions)==null?void 0:a.category})?new j(e):new B(e[0].message)}const Te=async()=>{const e=P.cartId;if(!e)throw new L;const{data:n,errors:t}=await k(le,{variables:{cartId:e}}).catch($);t&&de(t);const a=ee(n.placeOrder.orderV2);return pe(a),q.emit("checkout/order",a),q.emit("cart/reset",void 0),a};export{Te as p};
