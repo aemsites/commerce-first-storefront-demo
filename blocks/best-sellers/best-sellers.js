@@ -27,8 +27,7 @@ export default function decorate(block) {
       picture.lastElementChild.height = '1000';
 
       // Convert hard-coded product name to product URL
-      const urlKey = item.name.toLowerCase().replace(/\s+/g, '-');
-      const productUrl = `/products/${urlKey}/${item.sku}`;
+      const productUrl = `/products/${item.sku}`;
       const createdCard = document.createElement('div');
       createdCard.classList.add('wide-card');
       createdCard.innerHTML = `
