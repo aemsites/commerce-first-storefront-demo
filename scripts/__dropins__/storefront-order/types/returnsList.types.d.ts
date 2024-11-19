@@ -19,7 +19,6 @@ export interface ReturnsListProps {
             returnOrderItem: OrdersReturnPropsModel;
         }>;
     };
-    returnPageSize?: number;
     withReturnsListButton?: boolean;
     returnsInMinifiedView?: number;
     className?: string;
@@ -39,7 +38,7 @@ export interface ReturnsListProps {
     routeProductDetails?: (orderItem?: OrderItemModel) => string;
     withThumbnails?: boolean;
 }
-export interface ReturnsListContentProps extends Omit<ReturnsListProps, 'className' | 'returnPageSize'> {
+export interface ReturnsListContentProps extends Omit<ReturnsListProps, 'className'> {
     minifiedViewKey: 'minifiedView' | 'fullSizeView';
     orderReturns?: OrdersReturnPropsModel[] | [];
     translations: Record<string, string>;
@@ -52,7 +51,6 @@ export interface ReturnsListContentProps extends Omit<ReturnsListProps, 'classNa
     loading: boolean;
 }
 export interface UseReturnsListProps {
-    returnPageSize?: number;
 }
 export interface OrderReturnsProps {
     slots?: {
