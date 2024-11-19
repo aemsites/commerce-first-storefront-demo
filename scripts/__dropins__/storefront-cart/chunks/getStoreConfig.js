@@ -8,7 +8,7 @@ import{events as p}from"@dropins/tools/event-bus.js";import{s,d as M,f,h as d}fr
 fragment CUSTOMER_FRAGMENT on Customer {
   addresses {
     default_shipping
-    country_id
+    country_code
     postcode
     region {
       region

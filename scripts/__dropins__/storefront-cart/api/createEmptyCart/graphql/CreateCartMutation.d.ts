@@ -15,4 +15,5 @@
  * from Adobe.
  *******************************************************************/
 export declare const CREATE_EMPTY_CART_MUTATION = "\n    mutation CREATE_GUEST_CART_MUTATION {\n        createGuestCart {\n            cart {\n                id\n            }\n        }\n    }\n";
+export declare const CUSTOMER_CART_MUTATION = "\n    mutation CUSTOMER_CART_MUTATION {\n        customerCart {\n            cart {\n                id\n            }\n        }\n    }\n";
 //# sourceMappingURL=CreateCartMutation.d.ts.map
