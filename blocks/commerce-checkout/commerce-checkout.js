@@ -180,6 +180,13 @@ export default async function decorate(block) {
     modal = null;
   };
 
+  const hideOnCheckout = () => {
+    const elements = document.querySelectorAll('.hide-on-checkout');
+    elements.forEach(element => {
+      element.classList.add('hidden');
+    });
+  }
+
   const [
     _heading,
     _serverError,
@@ -378,7 +385,7 @@ export default async function decorate(block) {
         try {
           if (ctx.code === 'oope_adyen') {
             await startPayment();
-            hideElementsByClass('hide-on-checkout');
+            hideOnCheckout();
           } else {
             await checkoutApi.placeOrder();
           }
@@ -919,11 +926,4 @@ function paymentFailedOrError(result, component) {
   alert('Payment failed. Please try again.');
   console.error('Payment failed:', result);
   component.unmount();
-}
-
-function hideElementsByClass(className) {
-  const elements = document.querySelectorAll('.' + className);
-  elements.forEach(element => {
-    element.classList.add('hidden');
-  });
 }
