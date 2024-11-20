@@ -74,6 +74,9 @@ import '../../scripts/initializers/auth.js';
 import '../../scripts/initializers/cart.js';
 import '../../scripts/initializers/checkout.js';
 
+// Adyen
+import {AdyenCheckout, Dropin, Card} from '../../scripts/adyen/adyen-web/dist/es/index.js';
+
 export default async function decorate(block) {
   const DEBOUNCE_TIME = 1000;
   const LOGIN_FORM_NAME = 'login-form';
@@ -95,18 +98,19 @@ export default async function decorate(block) {
           <div class="checkout__block checkout__empty-cart"></div>
           <div class="checkout__block checkout__server-error"></div>
           <div class="checkout__block checkout__out-of-stock"></div>
-          <div class="checkout__block checkout__login"></div>
-          <div class="checkout__block checkout__shipping-form"></div>
-          <div class="checkout__block checkout__bill-to-shipping"></div>
-          <div class="checkout__block checkout__delivery"></div>
-          <div class="checkout__block checkout__payment-methods"></div>
-          <div class="checkout__block checkout__billing-form"></div>
+          <div class="checkout__block checkout__login hide-on-checkout"></div>
+          <div class="checkout__block checkout__shipping-form hide-on-checkout"></div>
+          <div class="checkout__block checkout__bill-to-shipping hide-on-checkout"></div>
+          <div class="checkout__block checkout__delivery hide-on-checkout"></div>
+          <div class="checkout__block checkout__payment-methods hide-on-checkout"></div>
+          <div class="checkout__block checkout__billing-form hide-on-checkout"></div>             
+          <div class="checkout__block" id="payment-dropin"></div>
         </div>
         <div class="checkout__aside">
           <div class="checkout__block checkout__block--aside checkout__order-summary"></div>
           <div class="checkout__block checkout__block--aside checkout__cart-summary"></div>
         </div>
-        <div class="checkout__place-order"></div>
+        <div class="checkout__place-order hide-on-checkout"></div>
       </div>
     </div>
   `);
@@ -264,7 +268,20 @@ export default async function decorate(block) {
       },
     })($delivery),
 
-    CheckoutProvider.render(PaymentMethods)($paymentMethods),
+    CheckoutProvider.render(PaymentMethods, {
+      slots: {
+        Handlers: {
+          checkmo: (_ctx) => {
+            const button = document.querySelector('[data-testid="place-order-button"]');
+            button.textContent = 'Place Order';
+          },
+          oope_adyen: async (_ctx) => {
+            const button = document.querySelector('[data-testid="place-order-button"]');
+            button.textContent = 'Pay Now';
+          }
+        }
+      }
+    })($paymentMethods),
 
     AccountProvider.render(AddressForm, {
       isOpen: true,
@@ -355,11 +372,16 @@ export default async function decorate(block) {
 
         return success;
       },
-      onPlaceOrder: async () => {
+      onPlaceOrder: async (ctx) => {
         displayOverlaySpinner();
 
         try {
-          await checkoutApi.placeOrder();
+          if (ctx.code === 'oope_adyen') {
+            await startPayment();
+            hideElementsByClass('hide-on-checkout');
+          } else {
+            await checkoutApi.placeOrder();
+          }
         } catch (error) {
           console.error(error);
           throw error;
@@ -802,4 +824,106 @@ export default async function decorate(block) {
   events.on('checkout/initialized', handleCheckoutInitialized, { eager: true });
   events.on('checkout/order', handleCheckoutOrder);
   events.on('checkout/updated', handleCheckoutUpdated);
+}
+
+async function startPayment() {
+  // TODO: context (cartId, amount and sessionUrl coming from dropin)
+  const cartData = await cartApi.getCartData();
+  const createSessionEndpoint =
+    'https://development-266782-oopeadyenref.adobeioruntime.net/api/v1/web/adyen/create-session';
+  const createSessionRequest = {
+    amount: {
+      value: cartData.total.includingTax.value * 100, // adyen requires the amount in cents
+      currency: cartData.total.includingTax.currency,
+    },
+    reference: cartData.id,
+    returnUrl: `${window.location.origin}/checkout`,
+    countryCode: 'NL',
+  };
+
+  const sessionData = await createSession(
+    createSessionEndpoint,
+    createSessionRequest
+  );
+
+  await mountPaymentDropin(sessionData);
+}
+
+async function createSession(
+  createSessionEndpoint,
+  createSessionRequest
+) {
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(createSessionRequest),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  };
+
+  try {
+    const response = await fetch(createSessionEndpoint, options);
+    if (!response.ok) {
+      throw new Error(`Failed to create session: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to create session:', error);
+    throw error;
+  }
+}
+
+async function mountPaymentDropin(sessionData) {
+  const configuration = {
+    session: {
+      id: sessionData.message.id,
+      sessionData: sessionData.message.sessionData,
+    },
+    environment: 'TEST',
+    amount: {
+      value: sessionData.message.amount.value,
+      currency: sessionData.message.amount.currency,
+    },
+    locale: sessionData.message.shopperLocale,
+    countryCode: sessionData.message.countryCode,
+    clientKey: 'test_PZZ2EBX7UVHOXLCFLSHF3YUMKA6AMPZ6', // TODO: can be coming from Commerce
+    analytics: {
+      enabled: true,
+    },
+    onPaymentCompleted: (result, component) => {
+      paymentCompleted(result, component);
+    },
+    onPaymentFailed: (result, component) => {
+      paymentFailedOrError(result, component);
+    },
+    onError: (error, component) => {
+      paymentFailedOrError(error, component);
+    },
+  };
+
+  const checkout = await AdyenCheckout(configuration);
+  new Dropin(checkout, {
+    paymentMethodComponents: [Card],
+  }).mount('#payment-dropin');
+}
+
+async function paymentCompleted(result, component) {
+  await checkoutApi.placeOrder()
+    .catch(e => {
+      console.error('Failed to place order:', e);
+      throw e;
+    });
+}
+
+function paymentFailedOrError(result, component) {
+  alert('Payment failed. Please try again.');
+  console.error('Payment failed:', result);
+  component.unmount();
+}
+
+function hideElementsByClass(className) {
+  const elements = document.querySelectorAll('.' + className);
+  elements.forEach(element => {
+    element.classList.add('hidden');
+  });
 }
