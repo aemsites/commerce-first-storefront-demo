@@ -1,0 +1,2 @@
+import{createElement as r}from"../../../../../external/preact/dist/preact.js";import{getCardImageUrl as t,getFullBrandName as e}from"../utils.js";import a from"../../../../../core/Context/useImage.js";function n({brand:n,brandsConfiguration:o={}}){const c=a(),s="card"===n?"nocard":n,d=o[n]?.icon??t(s,c);return r("img",{className:"adyen-checkout-card-input__icon adyen-checkout__card__cardNumber__brandIcon",onError:r=>{r.target.style.cssText="display: none"},alt:e(n),src:d})}export{n as default};
+//# sourceMappingURL=BrandIcon.js.map

@@ -35,6 +35,28 @@ fs.readdirSync('node_modules/@dropins', { withFileTypes: true }).forEach((file) 
 fs.copyFileSync(path.resolve(__dirname, './node_modules/@adobe/magento-storefront-event-collector/dist/index.js'), path.resolve(__dirname, './scripts/commerce-events-collector.js'));
 fs.copyFileSync(path.resolve(__dirname, './node_modules/@adobe/magento-storefront-events-sdk/dist/index.js'), path.resolve(__dirname, './scripts/commerce-events-sdk.js'));
 
+// Create scripts/adyen directory if not exists
+const adyenDir = path.join('scripts', 'adyen');
+if (fs.existsSync(adyenDir)) {
+  fs.rmSync(adyenDir, { recursive: true });
+}
+fs.mkdirSync(adyenDir, { recursive: true });
+fs.readdirSync('node_modules/@adyen', { withFileTypes: true }).forEach((file) => {
+  // Skip if package is not in package.json dependencies / skip devDependencies
+  if (!dependencies[`@adyen/${file.name}`]) {
+    return;
+  }
+
+  // Skip if is not folder
+  if (!file.isDirectory()) {
+    return;
+  }
+  fs.cpSync(path.join('node_modules', '@adyen', file.name), path.join(adyenDir, file.name), {
+    recursive: true,
+    filter: (src) => (!src.endsWith('package.json')),
+  });
+});
+
 function checkPackageLockForArtifactory() {
   return new Promise((resolve, reject) => {
     fs.readFile('package-lock.json', 'utf8', (err, data) => {
