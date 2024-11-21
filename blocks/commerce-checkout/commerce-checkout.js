@@ -74,7 +74,7 @@ import '../../scripts/initializers/auth.js';
 import '../../scripts/initializers/cart.js';
 import '../../scripts/initializers/checkout.js';
 
-// Adyen
+// Adyen (TODO: import will be changed)
 import {AdyenCheckout, Dropin, Card} from '../../scripts/adyen/adyen-web/dist/es/index.js';
 
 export default async function decorate(block) {
@@ -379,11 +379,11 @@ export default async function decorate(block) {
 
         return success;
       },
-      onPlaceOrder: async (ctx) => {
+      onPlaceOrder: async (_ctx) => {
         displayOverlaySpinner();
 
         try {
-          if (ctx.code === 'oope_adyen') {
+          if (_ctx.code === 'oope_adyen') {
             await startPayment();
             hideOnCheckout();
           } else {
@@ -833,8 +833,11 @@ export default async function decorate(block) {
   events.on('checkout/updated', handleCheckoutUpdated);
 }
 
+// TODO: Adyen implementations can be moved to a separate file once necessary fields are coming from dropins
+// Currently, keep it here for ease calling cart api.
 async function startPayment() {
-  // TODO: context (cartId, amount and sessionUrl coming from dropin)
+  // TODO: context (cartId, amount should come from checkout dropin)
+  // TODO: sessionUrl can be extended through graphQL extensibility
   const cartData = await cartApi.getCartData();
   const createSessionEndpoint =
     'https://development-266782-oopeadyenref.adobeioruntime.net/api/v1/web/adyen/create-session';
