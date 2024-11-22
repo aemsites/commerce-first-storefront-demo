@@ -223,6 +223,9 @@ fragment CART_FRAGMENT on Cart {
         currency
       }
       label
+      coupon {
+        code
+      }
       applied_to
     }
   }
