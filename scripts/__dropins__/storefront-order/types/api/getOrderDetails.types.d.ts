@@ -37,8 +37,8 @@ export interface ProductProps {
     };
 }
 export interface MoneyProps {
-    value?: number;
-    currency?: string;
+    value: number;
+    currency: string;
 }
 interface GrandTotalProps extends MoneyProps {
 }
@@ -56,8 +56,8 @@ interface TaxDetailProps {
     title?: string;
 }
 export interface DiscountProps {
-    amount?: MoneyProps;
-    label?: string;
+    amount: MoneyProps;
+    label: string;
 }
 export interface TotalProps {
     total_giftcard?: MoneyProps;
@@ -126,6 +126,7 @@ export interface OrderItemProps {
     quantity_refunded: number;
     quantity_returned: number;
     quantity_shipped: number;
+    quantity_return_requested: number;
     selected_options: {
         label: string;
         value: string;
@@ -245,6 +246,14 @@ export interface ErrorProps {
     errors?: {
         message?: string;
     }[];
+}
+type GetOrderDetailsByParams<T extends QueryType> = {
+    orderId?: string;
+    returnRef?: string;
+    queryType: T;
+    returnsPageSize?: number;
+};
+export interface GetOrderDetailsByIdProps extends GetOrderDetailsByParams<QueryType> {
 }
 export interface OrdersResponse extends ErrorProps {
     data?: {

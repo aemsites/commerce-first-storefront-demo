@@ -16,4 +16,5 @@ ${T}
 ${o}
 ${s}
 ${c}
-`,A=async()=>await e(h,{method:"GET",cache:"force-cache"}).then(r=>{var t,a;return(t=r.errors)!=null&&t.length?E(r.errors):u((a=r==null?void 0:r.data)==null?void 0:a.customer.returns)}).catch(R);export{A as g};
+${u}
+`,G=async(e=10)=>await E(n,{method:"GET",cache:"force-cache",variables:{pageSize:e}}).then(r=>{var t,a;return(t=r.errors)!=null&&t.length?_(r.errors):h((a=r==null?void 0:r.data)==null?void 0:a.customer.returns)}).catch(R);export{G as g};

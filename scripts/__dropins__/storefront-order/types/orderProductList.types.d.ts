@@ -21,6 +21,9 @@ export interface CartSummaryItemProps {
     taxConfig: TaxTypes;
     loading: boolean;
     translations: Record<string, string>;
+    product: OrderItemModel;
+    taxConfig: TaxTypes;
+    onQuantity?: (value: number) => void;
     showConfigurableOptions?: (options: options | {}) => options;
     itemType: string;
     product: OrderItemModel;

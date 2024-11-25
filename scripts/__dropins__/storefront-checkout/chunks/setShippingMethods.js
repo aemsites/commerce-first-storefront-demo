@@ -1,6 +1,6 @@
 /*! Copyright 2024 Adobe
 All Rights Reserved. */
-import{s as a,M as p,d as r}from"./fetch-graphql.js";import"./store-config.js";import"./ServerErrorSignal.js";import{t as o}from"./synchronizeCheckout.js";import"@dropins/tools/lib.js";import{events as n}from"@dropins/tools/event-bus.js";import{CHECKOUT_DATA_FRAGMENT as e}from"../fragments.js";const h=`
+import{s as a,M as p,d as r}from"./fetch-graphql.js";import"./store-config.js";import"./ServerErrorSignal.js";import{b as o}from"./synchronizeCheckout.js";import"@dropins/tools/lib.js";import{events as n}from"@dropins/tools/event-bus.js";import{CHECKOUT_DATA_FRAGMENT as e}from"../fragments.js";const h=`
   mutation setShippingMethods(
     $cartId: String!
     $shippingMethods: [ShippingMethodInput]!

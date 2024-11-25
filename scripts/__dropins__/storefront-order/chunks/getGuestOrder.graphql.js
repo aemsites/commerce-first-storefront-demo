@@ -144,8 +144,8 @@ ${s}
 ${n}
 ${i}
 ${d}
-`,_=`
-  query GET_GUEST_ORDER($input: OrderInformationInput!) {
+`,u=`
+  query GET_GUEST_ORDER($input: GuestOrderInformationInput!) {
   guestOrder(input:$input) {
     ...guestOrderData
     }

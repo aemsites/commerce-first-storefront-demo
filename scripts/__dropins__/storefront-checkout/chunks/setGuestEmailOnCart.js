@@ -1,6 +1,6 @@
 /*! Copyright 2024 Adobe
 All Rights Reserved. */
-import{s as i,M as s,d as e}from"./fetch-graphql.js";import{CHECKOUT_DATA_FRAGMENT as o}from"../fragments.js";import{t as m}from"./synchronizeCheckout.js";import"./store-config.js";import"./ServerErrorSignal.js";import{events as n}from"@dropins/tools/event-bus.js";import"@dropins/tools/lib.js";const c=`
+import{s as i,M as s,d as e}from"./fetch-graphql.js";import{CHECKOUT_DATA_FRAGMENT as o}from"../fragments.js";import{b as m}from"./synchronizeCheckout.js";import"./store-config.js";import"./ServerErrorSignal.js";import{events as n}from"@dropins/tools/event-bus.js";import"@dropins/tools/lib.js";const c=`
   mutation setGuestEmail($cartId: String!, $email: String!) {
     setGuestEmailOnCart(input: { cart_id: $cartId, email: $email }) {
       cart {
