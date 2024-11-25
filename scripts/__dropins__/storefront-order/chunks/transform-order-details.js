@@ -4,6 +4,7 @@ import{a as z}from"./convertCase.js";const d=`
   fragment ProductDetails on ProductInterface {
     __typename
     canonical_url
+    url_key
     uid
     name
     sku
@@ -61,6 +62,8 @@ import{a as z}from"./convertCase.js";const d=`
   fragment OrderItemDetails on OrderItemInterface {
     __typename
     status
+    product_sku
+    eligible_for_return
     product_name
     product_url_key
     id

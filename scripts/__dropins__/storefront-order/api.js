@@ -17,8 +17,27 @@ query ORDER_BY_NUMBER($orderNumber: String!, $pageSize: Int) {
         carrier
         shipping_method
         is_virtual
-        returns {
+        returns(pageSize: $pageSize) {
           ...OrderReturns
+        }
+        items_eligible_for_return {
+          ...OrderItemDetails
+          ... on BundleOrderItem {
+            ...BundleOrderItemDetails
+          }
+          ... on GiftCardOrderItem {
+            ...GiftCardDetails
+            product {
+              ...ProductDetails
+            }
+          }
+          ... on DownloadableOrderItem {
+            product_name
+            downloadable_links {
+              sort_order
+              title
+            }
+          }
         }
         applied_coupons {
           code
@@ -89,6 +108,7 @@ query ORDER_BY_NUMBER($orderNumber: String!, $pageSize: Int) {
 }
 ${u}
 ${_}
+${p}
 ${c}
 ${D}
 ${R}
@@ -110,7 +130,10 @@ query ORDER_BY_TOKEN($token: String!) {
     gift_receipt_included
     available_actions
     is_virtual
-    returns {
+    items_eligible_for_return {
+      ...OrderItemDetails
+    }
+    returns(pageSize: 50) {
       ...OrderReturns
     }
     payment_methods {
@@ -182,6 +205,7 @@ query ORDER_BY_TOKEN($token: String!) {
 }
 ${u}
 ${_}
+${p}
 ${c}
 ${D}
 ${R}

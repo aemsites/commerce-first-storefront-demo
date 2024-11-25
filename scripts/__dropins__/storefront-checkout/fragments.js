@@ -20,6 +20,12 @@ const e=`
     }
     street
     telephone
+    custom_attributes {
+      ... on AttributeValue {
+        code
+        value
+      }
+    }
   }
 `,t=`
   fragment SHIPPING_CART_ADDRESS_FRAGMENT on ShippingCartAddress {
@@ -41,6 +47,12 @@ const e=`
       label
     }
     telephone
+    custom_attributes {
+      ... on AttributeValue {
+        code
+        value
+      }
+    }
     available_shipping_methods {
       amount {
         currency

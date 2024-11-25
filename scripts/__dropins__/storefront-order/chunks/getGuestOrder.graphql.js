@@ -1,3 +1,5 @@
+/*! Copyright 2024 Adobe
+All Rights Reserved. */
 import{P as e,a as t,G as r,O as a,B as s,R as d}from"./transform-order-details.js";const n=`
 fragment OrderSummary on OrderTotal {
   grand_total {
@@ -67,6 +69,9 @@ fragment AddressesList on OrderAddress {
     gift_receipt_included
     available_actions
     is_virtual
+    items_eligible_for_return {
+      ...OrderItemDetails
+    }
     returns {
       ...OrderReturns
     }
@@ -89,6 +94,7 @@ fragment AddressesList on OrderAddress {
       timestamp
     }
     items {
+      __typename
       id
       product_sku
       product_name
@@ -151,4 +157,4 @@ ${d}
     }
   }
 ${o}
-`;export{i as A,o as G,n as O,_ as a};
+`;export{i as A,o as G,n as O,u as a};
