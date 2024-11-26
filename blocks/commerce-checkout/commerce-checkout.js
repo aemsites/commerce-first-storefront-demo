@@ -896,7 +896,7 @@ async function mountPaymentDropin(sessionData) {
     },
     locale: sessionData.message.shopperLocale,
     countryCode: sessionData.message.countryCode,
-    clientKey: 'test_PZZ2EBX7UVHOXLCFLSHF3YUMKA6AMPZ6', // TODO: can be coming from Commerce
+    clientKey: 'test_5GVMOA5CUZDFFJ7STY3WHIWEOA4QN6CI', // TODO: can be coming from Commerce
     analytics: {
       enabled: true,
     },
