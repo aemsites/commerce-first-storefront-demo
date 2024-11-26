@@ -302,3 +302,8 @@
     margin-top: 0;
   }
 }
+
+/** Order Payment **/
+.hidden {
+    display: none !important;
+}
