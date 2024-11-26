@@ -1,5 +1,32 @@
 declare const _default: {
   "Order": {
+    "CreateReturn": {
+      "headerText": "Return items",
+      "downloadableCount": "Files",
+      "returnedItems": "Returned items:",
+      "configurationsList": {
+        "quantity": "Quantity"
+      },
+      "stockStatus": {
+        "inStock": "In stock",
+        "outOfStock": "Out of stock"
+      },
+      "giftCard": {
+        "sender": "Sender",
+        "recipient": "Recipient",
+        "message": "Note"
+      },
+      "success": {
+        "title": "Return submitted",
+        "message": "Your return request has been successfully submitted."
+      },
+      "buttons": {
+        "nextStep": "Continue",
+        "backStep": "Back",
+        "submit": "Submit return",
+        "backStore": "Back to order"
+      }
+    },
     "OrderCostSummary": {
       "headerText": "Order summary",
       "headerReturnText": "Return summary",
@@ -41,7 +68,7 @@ declare const _default: {
             "one": "item",
             "many": "items"
           },
-          "resturnStatus": {
+          "returnStatus": {
             "pending": "Pending",
             "authorized": "Authorized",
             "partiallyAuthorized": "Partially authorized",
@@ -71,7 +98,7 @@ declare const _default: {
             "one": "item",
             "many": "items"
           },
-          "resturnStatus": {
+          "returnStatus": {
             "pending": "Pending",
             "authorized": "Authorized",
             "partiallyAuthorized": "Partially authorized",
@@ -91,7 +118,7 @@ declare const _default: {
     "OrderProductListContent": {
       "cancelledTitle": "Cancelled",
       "allOrdersTitle": "Your order",
-      "returnedTitle": "Your return",
+      "returnedTitle": "Returned",
       "refundedTitle": "Your refunded",
       "downloadableCount": "Files",
       "stockStatus": {
@@ -109,7 +136,7 @@ declare const _default: {
       "description": "You can find your order number in the receipt you received via email.",
       "button": "View Order",
       "email": "Email",
-      "postcode": "Zip Code",
+      "lastname": "Last Name",
       "orderNumber": "Order Number"
     },
     "Form": {
@@ -140,7 +167,7 @@ declare const _default: {
     "OrderStatusContent": {
       "noInfoTitle": "Check back later for more details.",
       "returnMessage": "The order was placed on {ORDER_CREATE_DATE} and your return process started on {RETURN_CREATE_DATE}",
-      "resturnStatus": {
+      "returnStatus": {
         "pending": "Pending",
         "authorized": "Authorized",
         "partiallyAuthorized": "Partially authorized",

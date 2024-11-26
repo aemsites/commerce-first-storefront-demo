@@ -19,6 +19,7 @@ export type OrderAddressModel = {
     }[];
 } | null;
 export type OrderItemProductModel = {
+    uid: string;
     __typename: string;
     stockStatus?: string;
     canonicalUrl?: string;
@@ -35,19 +36,21 @@ export type OrderItemProductModel = {
     };
 };
 export type OrderItemModel = {
+    currentReturnOrderQuantity?: number;
+    eligibleForReturn: boolean;
+    productSku?: string;
     type?: string;
     discounted?: boolean;
     id: string;
     productName?: string;
     productUrlKey?: string;
     regularPrice?: MoneyProps;
-    price?: MoneyProps;
+    price: MoneyProps;
     product?: OrderItemProductModel;
     selectedOptions?: Array<{
         label: string;
         value: any;
     }>;
-    totalQuantity?: number;
     thumbnail?: {
         label: string;
         url: string;
@@ -55,7 +58,7 @@ export type OrderItemModel = {
     downloadableLinks: {
         count: number;
         result: string;
-    };
+    } | null;
     itemPrices: {
         priceIncludingTax: MoneyProps;
         originalPrice: MoneyProps;
@@ -89,11 +92,15 @@ export type OrderItemModel = {
     quantityReturned: number;
     quantityShipped: number;
     requestQuantity: number;
+    totalQuantity: number;
+    returnableQuantity?: number;
+    quantityReturnRequested: number;
 };
 export type ShipmentItemsModel = {
     id: string;
     productSku: string;
     productName: string;
+    quantityShipped: number;
     orderItem: OrderItemModel;
 };
 export type ShipmentsTracingModel = {
@@ -116,7 +123,7 @@ export type OrderDataModel = {
     id: string;
     orderStatusChangeDate?: string;
     number: string;
-    email?: string;
+    email: string;
     token?: string;
     status: string;
     isVirtual: boolean;
