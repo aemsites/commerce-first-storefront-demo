@@ -1,6 +1,4 @@
-/*! Copyright 2024 Adobe
-All Rights Reserved. */
-const e=`
+const e = `
   fragment BILLING_CART_ADDRESS_FRAGMENT on BillingCartAddress {
     id
     city
@@ -20,8 +18,14 @@ const e=`
     }
     street
     telephone
+    custom_attributes {
+      ... on AttributeValue {
+        code
+        value
+      }
+    }
   }
-`,t=`
+`, t = `
   fragment SHIPPING_CART_ADDRESS_FRAGMENT on ShippingCartAddress {
     id
     firstname
@@ -41,6 +45,12 @@ const e=`
       label
     }
     telephone
+    custom_attributes {
+      ... on AttributeValue {
+        code
+        value
+      }
+    }
     available_shipping_methods {
       amount {
         currency
@@ -81,34 +91,53 @@ const e=`
     }
     same_as_billing
   }
-`,a=`
-  fragment CHECKOUT_DATA_FRAGMENT on Cart {
-    id
-    is_virtual
-    email
-    total_quantity
-    billing_address {
-      ...BILLING_CART_ADDRESS_FRAGMENT
-    }
-    shipping_addresses {
-      ...SHIPPING_CART_ADDRESS_FRAGMENT
-    }
-    available_payment_methods {
-      code
-      title
-    }
-    selected_payment_method {
-      code
-      title
+`, a = (`fragment CHECKOUT_DATA_FRAGMENT on Cart {
+  id
+  is_virtual
+  email
+  total_quantity
+  billing_address {
+    ...BILLING_CART_ADDRESS_FRAGMENT
+  }
+  shipping_addresses {
+    ...SHIPPING_CART_ADDRESS_FRAGMENT
+  }
+  available_payment_methods {
+    code
+    title
+    oope_payment_method_config {
+      backend_integration_url
+      custom_config {
+        ... on CustomConfigKeyValue {
+          key
+          value
+        }
+      }
     }
   }
-
-  ${e}
-  ${t}
-`,_=`
+  selected_payment_method {
+    code
+    title
+    oope_payment_method_config {
+      backend_integration_url
+      custom_config {
+        ... on CustomConfigKeyValue {
+          key
+          value
+        }
+      }
+    }
+  }
+}
+${e}
+${t}`), _ = `
   fragment CUSTOMER_FRAGMENT on Customer {
     firstname
     lastname
     email
   }
-`;export{a as CHECKOUT_DATA_FRAGMENT,_ as CUSTOMER_FRAGMENT};
+`;
+export {
+  a as CHECKOUT_DATA_FRAGMENT,
+  _ as CUSTOMER_FRAGMENT
+};
