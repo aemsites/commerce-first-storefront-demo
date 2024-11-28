@@ -11,12 +11,12 @@ export default async function decorate(block) {
   const storeDetails = {
     environmentId: await getConfigValue('commerce-environment-id'),
     environmentType: (await getConfigValue('commerce-environment')) || '',
-    apiUrl: await getConfigValue('commerce-endpoint'),
     apiKey: await getConfigValue('commerce-x-api-key'),
     apiUrl: await getConfigValue('commerce-endpoint'),
     websiteCode: await getConfigValue('commerce-website-code'),
     storeCode: await getConfigValue('commerce-store-code'),
     storeViewCode: await getConfigValue('commerce-store-view-code'),
+    productViewOnly: true,
     config: {
       pageSize: 8,
       perPageConfig: {
