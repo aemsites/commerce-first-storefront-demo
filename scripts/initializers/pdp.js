@@ -1,23 +1,23 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint import/no-cycle: [2, { maxDepth: 1 }] */
 
-import { initializers } from '@dropins/tools/initializer.js';
-import { Image, provider as UI } from '@dropins/tools/components.js';
+import { initializers } from "@dropins/tools/initializer.js";
+import { Image, provider as UI } from "@dropins/tools/components.js";
 import {
   initialize,
   setEndpoint,
   setFetchGraphQlHeaders,
   fetchProductData,
-} from '@dropins/storefront-pdp/api.js';
-import { initializeDropin } from './index.js';
+} from "@dropins/storefront-pdp/api.js";
+import { initializeDropin } from "./index.js";
 import {
   commerceEndpointWithQueryParams,
   getOptionsUIDsFromUrl,
   getSkuFromUrl,
   loadErrorPage,
-} from '../commerce.js';
-import { getConfigValue } from '../configs.js';
-import { fetchPlaceholders } from '../aem.js';
+} from "../commerce.js";
+import { getConfigValue } from "../configs.js";
+import { fetchPlaceholders } from "../aem.js";
 
 export const IMAGES_SIZES = {
   width: 960,
@@ -26,19 +26,33 @@ export const IMAGES_SIZES = {
 
 await initializeDropin(async () => {
   // Set Fetch Endpoint (Service)
-  setEndpoint(await commerceEndpointWithQueryParams());
+  // setEndpoint(await commerceEndpointWithQueryParams());
+  setEndpoint(await getConfigValue("commerce-endpoint"));
 
   // Set Fetch Headers (Service)
   setFetchGraphQlHeaders({
-    'Content-Type': 'application/json',
-    'x-api-key': await getConfigValue('commerce-x-api-key'),
+    "Content-Type": "application/json",
+    "Magento-Environment-Id": await getConfigValue("commerce-environment-id"),
+    "Magento-Website-Code": await getConfigValue("commerce-website-code"),
+    "Magento-Store-View-Code": await getConfigValue("commerce-store-view-code"),
+    "Magento-Store-Code": await getConfigValue("commerce-store-code"),
+    "Magento-Customer-Group": await getConfigValue("commerce-customer-group"),
+    "x-api-key": await getConfigValue("commerce-x-api-key"),
   });
+
+  // // Set Fetch Headers (Service)
+  // setFetchGraphQlHeaders({
+  //   "Content-Type": "application/json",
+  //   "x-api-key": await getConfigValue("commerce-x-api-key"),
+  // });
 
   const sku = getSkuFromUrl();
   const optionsUIDs = getOptionsUIDsFromUrl();
 
   const [product, labels] = await Promise.all([
-    fetchProductData(sku, { optionsUIDs, skipTransform: true }).then(preloadImageMiddleware),
+    fetchProductData(sku, { optionsUIDs, skipTransform: true }).then(
+      preloadImageMiddleware
+    ),
     fetchPlaceholders(),
   ]);
 
@@ -70,7 +84,7 @@ await initializeDropin(async () => {
 })();
 
 async function preloadImageMiddleware(data) {
-  const image = data?.images?.[0]?.url?.replace(/^https?:/, '');
+  const image = data?.images?.[0]?.url?.replace(/^https?:/, "");
 
   if (image) {
     await UI.render(Image, {
@@ -79,8 +93,8 @@ async function preloadImageMiddleware(data) {
       params: {
         ...IMAGES_SIZES,
       },
-      loading: 'eager',
-    })(document.createElement('div'));
+      loading: "eager",
+    })(document.createElement("div"));
   }
   return data;
 }
