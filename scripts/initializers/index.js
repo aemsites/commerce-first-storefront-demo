@@ -6,9 +6,7 @@ import {
   setEndpoint,
   setFetchGraphQlHeader,
 } from '@dropins/tools/fetch-graphql.js';
-
-// Recaptcha
-import * as recaptcha from '@dropins/tools/recaptcha.js';
+import * as authApi from '@dropins/storefront-auth/api.js';
 
 // Libs
 import { getConfigValue, getCookie } from '../configs.js';
@@ -22,6 +20,7 @@ const setAuthHeaders = (state) => {
     setFetchGraphQlHeader('Authorization', `Bearer ${token}`);
   } else {
     removeFetchGraphQlHeader('Authorization');
+    authApi.removeFetchGraphQlHeader('Authorization');
   }
 };
 
@@ -50,8 +49,13 @@ export default async function initializeDropins() {
   events.enableLogger(true);
   // Set Fetch Endpoint (Global)
   setEndpoint(await getConfigValue('commerce-core-endpoint'));
-  // Recaptcha
-  recaptcha.setConfig();
+
+  events.on('eds/lcp', async () => {
+    // Recaptcha
+    await import('@dropins/tools/recaptcha.js').then(({ setConfig }) => {
+      setConfig();
+    });
+  });
 
   // Initialize Global Drop-ins
   await import('./auth.js');

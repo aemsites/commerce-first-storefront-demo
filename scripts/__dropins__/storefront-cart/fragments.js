@@ -94,7 +94,11 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       }
       label
     }
-    original_row_total{
+    original_item_price {
+      value
+      currency
+    }
+    original_row_total {
       value
       currency
     }
@@ -106,6 +110,13 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
     thumbnail {
       url
       label
+    }
+    url_key
+    canonical_url
+    categories {
+      url_path
+      url_key
+      name
     }
     custom_attributesV2(filters: {is_visible_on_front: true}){
       items{
@@ -184,7 +195,7 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
 
 ${e}
 ${t}
-`,n=`
+`,r=`
 fragment CART_FRAGMENT on Cart {
   id
   total_quantity
@@ -253,4 +264,4 @@ fragment CART_FRAGMENT on Cart {
 }
 
 ${a}
-`;export{n as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};
+`;export{r as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};

@@ -20,6 +20,16 @@ const e=`
     }
     street
     telephone
+    custom_attributes {
+      ... on AttributeValue {
+        code
+        value
+      }
+    }
+    prefix
+    suffix
+    middlename
+    fax
   }
 `,t=`
   fragment SHIPPING_CART_ADDRESS_FRAGMENT on ShippingCartAddress {
@@ -41,6 +51,12 @@ const e=`
       label
     }
     telephone
+    custom_attributes {
+      ... on AttributeValue {
+        code
+        value
+      }
+    }
     available_shipping_methods {
       amount {
         currency
@@ -80,6 +96,10 @@ const e=`
       }
     }
     same_as_billing
+    prefix
+    suffix
+    middlename
+    fax
   }
 `,a=`
   fragment CHECKOUT_DATA_FRAGMENT on Cart {
@@ -105,10 +125,10 @@ const e=`
 
   ${e}
   ${t}
-`,_=`
+`,i=`
   fragment CUSTOMER_FRAGMENT on Customer {
     firstname
     lastname
     email
   }
-`;export{a as CHECKOUT_DATA_FRAGMENT,_ as CUSTOMER_FRAGMENT};
+`;export{a as CHECKOUT_DATA_FRAGMENT,i as CUSTOMER_FRAGMENT};
