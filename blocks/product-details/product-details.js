@@ -255,7 +255,7 @@ async function setJsonLdProduct(product) {
     attributes,
   } = product;
   const amount = priceRange?.minimum?.final?.amount || price?.final?.amount;
-  const brand = attributes.find((attr) => attr.name === "brand");
+  const brand = attributes.find((attr) => attr.name === 'brand');
 
   // get variants
   const { data } = await pdpApi.fetchGraphQl(`
@@ -286,48 +286,42 @@ async function setJsonLdProduct(product) {
   const variants = data?.variants?.variants || [];
 
   const ldJson = {
-    "@context": "http://schema.org",
-    "@type": "Product",
+    '@context': 'http://schema.org',
+    '@type': 'Product',
     name,
     description,
     image: images[0]?.url,
     offers: [],
     productID: sku,
     brand: {
-      "@type": "Brand",
+      '@type': 'Brand',
       name: brand?.value,
     },
     url: new URL(`/products/${urlKey}/${sku}`, window.location),
     sku,
-    "@id": new URL(`/products/${urlKey}/${sku}`, window.location),
+    '@id': new URL(`/products/${urlKey}/${sku}`, window.location),
   };
 
   if (variants.length > 1) {
-    ldJson.offers.push(
-      ...variants.map((variant) => ({
-        "@type": "Offer",
-        name: variant.product.name,
-        image: variant.product.images[0]?.url,
-        price: variant.product.price.final.amount.value,
-        priceCurrency: variant.product.price.final.amount.currency,
-        availability: variant.product.inStock
-          ? "http://schema.org/InStock"
-          : "http://schema.org/OutOfStock",
-        sku: variant.product.sku,
-      }))
-    );
+    ldJson.offers.push(...variants.map((variant) => ({
+      '@type': 'Offer',
+      name: variant.product.name,
+      image: variant.product.images[0]?.url,
+      price: variant.product.price.final.amount.value,
+      priceCurrency: variant.product.price.final.amount.currency,
+      availability: variant.product.inStock ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock',
+      sku: variant.product.sku,
+    })));
   } else {
     ldJson.offers.push({
-      "@type": "Offer",
+      '@type': 'Offer',
       price: amount?.value,
       priceCurrency: amount?.currency,
-      availability: inStock
-        ? "http://schema.org/InStock"
-        : "http://schema.org/OutOfStock",
+      availability: inStock ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock',
     });
   }
 
-  setJsonLd(ldJson, "product");
+  setJsonLd(ldJson, 'product');
 }
 
 function createMetaTag(property, content, type) {
@@ -341,15 +335,15 @@ function createMetaTag(property, content, type) {
       return;
     }
     meta.setAttribute(type, property);
-    meta.setAttribute("content", content);
+    meta.setAttribute('content', content);
     return;
   }
   if (!content) {
     return;
   }
-  meta = document.createElement("meta");
+  meta = document.createElement('meta');
   meta.setAttribute(type, property);
-  meta.setAttribute("content", content);
+  meta.setAttribute('content', content);
   document.head.appendChild(meta);
 }
 
@@ -360,9 +354,9 @@ function setMetaTags(product) {
 
   const price = product.prices.final.minimumAmount ?? product.prices.final.amount;
 
-  createMetaTag("title", product.metaTitle || product.name, "name");
-  createMetaTag("description", product.metaDescription, "name");
-  createMetaTag("keywords", product.metaKeyword, "name");
+  createMetaTag('title', product.metaTitle || product.name, 'name');
+  createMetaTag('description', product.metaDescription, 'name');
+  createMetaTag('keywords', product.metaKeyword, 'name');
 
   createMetaTag('og:type', 'product', 'property');
   createMetaTag('og:description', product.shortDescription, 'property');
