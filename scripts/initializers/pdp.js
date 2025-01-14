@@ -26,10 +26,7 @@ export const IMAGES_SIZES = {
 
 await initializeDropin(async () => {
   // Set Fetch Endpoint (Service)
-  // setEndpoint(await commerceEndpointWithQueryParams());
-  setEndpoint(await getConfigValue("commerce-endpoint"));
-
-  // Set Fetch Headers (Service)
+  setEndpoint(await commerceEndpointWithQueryParams());
   setFetchGraphQlHeaders({
     "Content-Type": "application/json",
     "Magento-Environment-Id": await getConfigValue("commerce-environment-id"),
@@ -40,11 +37,11 @@ await initializeDropin(async () => {
     "x-api-key": await getConfigValue("commerce-x-api-key"),
   });
 
-  // // Set Fetch Headers (Service)
-  // setFetchGraphQlHeaders({
-  //   "Content-Type": "application/json",
-  //   "x-api-key": await getConfigValue("commerce-x-api-key"),
-  // });
+  // Set Fetch Headers (Service)
+  setFetchGraphQlHeaders({
+    "Content-Type": "application/json",
+    "x-api-key": await getConfigValue("commerce-x-api-key"),
+  });
 
   const sku = getSkuFromUrl();
   const optionsUIDs = getOptionsUIDsFromUrl();
