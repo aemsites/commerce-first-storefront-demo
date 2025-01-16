@@ -227,13 +227,18 @@ function readBlockConfig(block) {
 /**
  * Loads a CSS file.
  * @param {string} href URL to the CSS file
+ * @param {Object} attrs additional optional attributes
  */
-async function loadCSS(href) {
+async function loadCSS(href, attrs = {}) {
   return new Promise((resolve, reject) => {
     if (!document.querySelector(`head > link[href="${href}"]`)) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
+      Object.values(attrs).forEach((value, index) => {
+        const attr = Object.keys(attrs)[index];
+        link.setAttribute(attr, value);
+      });
       link.onload = resolve;
       link.onerror = reject;
       document.head.append(link);
