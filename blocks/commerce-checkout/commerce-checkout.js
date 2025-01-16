@@ -402,15 +402,15 @@ export default async function decorate(block) {
 
         return success;
       },
-      handlePlaceOrder: async ({ cartId }) => {
+      handlePlaceOrder: async ({ cartId, code }) => {
         await displayOverlaySpinner();
-        // await orderApi.placeOrder(cartId).finally(removeOverlaySpinner);
+
         try {
-          if (_ctx.code === 'oope_adyen') {
-            await startPayment();
+          if (code === 'oope_adyen') {
+            await startPayment(cartId);
             hideOnCheckout();
           } else {
-            await checkoutApi.placeOrder();
+            await orderApi.placeOrder(cartId);
           }
         } catch (error) {
           console.error(error);
@@ -468,6 +468,13 @@ export default async function decorate(block) {
     loader.remove();
     loader = null;
     $loader.innerHTML = '';
+  };
+
+  const hideOnCheckout = () => {
+    const elements = document.querySelectorAll('.hide-on-checkout');
+    elements.forEach((element) => {
+      element.classList.add('hidden');
+    });
   };
 
   const initializeCheckout = async (data) => {
@@ -869,7 +876,7 @@ export default async function decorate(block) {
 
 // TODO: Adyen implementations can be moved to a separate file once necessary fields are
 // propagated from dropins. Currently, keep it here for ease calling cart api.
-async function startPayment() {
+async function startPayment(cartId) {
   // TODO: context (cartId, amount, sessionUrl, clientKey should come from checkout dropin)
   const cartData = await cartApi.getCartData();
   const createSessionEndpoint = 'https://development-266782-oopeadyenref.adobeioruntime.net/api/v1/web/adyen/create-session';
@@ -905,7 +912,7 @@ async function startPayment() {
       enabled: true,
     },
     onPaymentCompleted: (result, component) => {
-      paymentCompleted(result, component);
+      paymentCompleted(result, component, cartId);
     },
     onPaymentFailed: (result, component) => {
       paymentFailedOrError(result, component);
@@ -918,8 +925,8 @@ async function startPayment() {
   await mountPaymentDropin(configuration, '#payment-dropin');
 }
 
-async function paymentCompleted(result, component) {
-  await checkoutApi.placeOrder()
+async function paymentCompleted(result, component, cartId) {
+  await orderApi.placeOrder(cartId)
     .catch((e) => {
       console.error('Failed to place order:', e);
       throw e;
