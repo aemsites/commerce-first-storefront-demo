@@ -15,9 +15,9 @@ import {
   getOptionsUIDsFromUrl,
   getSkuFromUrl,
   loadErrorPage,
-} from "../commerce.js";
-import { getConfigValue } from "../configs.js";
-import { fetchPlaceholders } from "../aem.js";
+} from '../commerce.js';
+import { getHeaders } from '../configs.js';
+import { fetchPlaceholders } from '../aem.js';
 
 export const IMAGES_SIZES = {
   width: 960,
@@ -28,13 +28,8 @@ await initializeDropin(async () => {
   // Set Fetch Endpoint (Service)
   setEndpoint(await commerceEndpointWithQueryParams());
   setFetchGraphQlHeaders({
-    "Content-Type": "application/json",
-    "Magento-Environment-Id": await getConfigValue("commerce-environment-id"),
-    "Magento-Website-Code": await getConfigValue("commerce-website-code"),
-    "Magento-Store-View-Code": await getConfigValue("commerce-store-view-code"),
-    "Magento-Store-Code": await getConfigValue("commerce-store-code"),
-    "Magento-Customer-Group": await getConfigValue("commerce-customer-group"),
-    "x-api-key": await getConfigValue("commerce-x-api-key"),
+    ...(await getHeaders('cs')),
+    'Content-Type': 'application/json',
   });
 
   // Set Fetch Headers (Service)
