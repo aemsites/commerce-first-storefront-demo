@@ -146,7 +146,7 @@ export function renderPrice(product, format, html = (strings, ...values) => stri
 
 export function getSkuFromUrl() {
   const path = window.location.pathname;
-  const result = path.match(/\/products\/([\w|-]+)$/);
+  const result = path.match(/\/products\/[\w|-]+\/([\w|-]+)$/);
   return result?.[1];
 }
 

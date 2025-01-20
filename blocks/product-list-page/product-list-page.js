@@ -47,7 +47,7 @@ export default async function decorate(block) {
     },
     route: ({ sku }) => {
       const a = new URL(window.location.origin);
-      a.pathname = `/products/${sku}`;
+      a.pathname = `/products/${sku}/${sku}`;
       return a.toString();
     },
   };
