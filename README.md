@@ -5,20 +5,8 @@ This project boilerplate is for Edge Delivery Services projects that integrate w
 https://experienceleague.adobe.com/developer/commerce/storefront/
 
 ## Environments
-
-- Preview: https://main--commerce-first-storefront-demo--aemsites.aem.page/
-- Live: https://main--commerce-first-storefront-demo--aemsites.aem.live/gear
-
-## Pre-requisites
-
-
-Additionally, you need to have the following modules and customizations installed on your environment:
-
-1. magento/magento-extra-graphql: Commerce module required for Cart and Checkout Drop-Ins.
-1. magento/module-data-services-graphql: Commerce module with functionality necessary for adding context to events.
-1. magento/module-page-builder-product-recommendations: Commerce module required for PRex Widget
-1. magento/module-visual-product-recommendations: Commerce module required for PRex Widget
-<!-- 1. TODO: Add further prereqs.  -->
+- Preview: https://main--{repo}--{owner}.aem.page/
+- Live: https://main--{repo}--{owner}.aem.live/
 
 ## Pre-requisites
 
@@ -59,7 +47,7 @@ npm run lint
 1. Add your Adobe Commerce SaaS configuration in the `configs.xlsx` sheet in your content repository.
 1. Install all dependencies using `npm i`.
 1. Start AEM Proxy: `npm run up` (opens your browser at `http://localhost:3000`)
-1. Open the `boilerplate-commerce-dropins` directory in your favorite IDE and start coding :)
+1. Open the `{repo}` directory in your favorite IDE and start coding :)
 
 ## Changelog
 
