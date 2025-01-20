@@ -879,8 +879,10 @@ export default async function decorate(block) {
 async function startPayment(cartId) {
   // TODO: context (cartId, amount, sessionUrl, clientKey should come from checkout dropin)
   const cartData = await cartApi.getCartData();
-  const createSessionEndpoint = 'https://development-266782-oopeadyenref.adobeioruntime.net/api/v1/web/adyen/create-session';
-  const createSessionRequest = {
+  // const createSessionEndpoint = 'https://development-266782-oopeadyenref.adobeioruntime.net/api/v1/web/adyen/create-session';
+  const createSessionEndpoint = 'https://development-266782-987plumskunk.dev.runtime.adobe.io/api/v1/web/adyen/create-session';
+
+    const createSessionRequest = {
     amount: {
       value: cartData.total.includingTax.value * 100, // adyen requires the amount in cents
       currency: cartData.total.includingTax.currency,
