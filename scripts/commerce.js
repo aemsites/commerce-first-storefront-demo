@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export, import/no-cycle */
-import { getConfigValue, getCookie } from './configs.js';
+import {
+  getConfigValue, getCookie, getHeaders,
+} from './configs.js';
 import { getConsent } from './scripts.js';
 
 /* Common query fragments */
@@ -19,152 +21,22 @@ export const priceFieldsFragment = `fragment priceFields on ProductViewPrice {
   }
 }`;
 
-/* Queries PDP */
-export const refineProductQuery = `query RefineProductQuery($sku: String!, $variantIds: [String!]!) {
-  refineProduct(
-    sku: $sku,
-    optionIds: $variantIds
-  ) {
-    images(roles: []) {
-      url
-      roles
-      label
-    }
-    ... on SimpleProductView {
-      price {
-        ...priceFields
-      }
-    }
-    addToCartAllowed
-  }
+export async function commerceEndpointWithQueryParams() {
+  const urlWithQueryParams = new URL(await getConfigValue('commerce-endpoint'));
+  // Set some query parameters for use as a cache-buster. No other purpose.
+  urlWithQueryParams.searchParams.append('ac-storecode', await getConfigValue('commerce.headers.cs.Magento-Store-Code'));
+  return urlWithQueryParams;
 }
-${priceFieldsFragment}`;
-
-export const productDetailQuery = `query ProductQuery($sku: String!) {
-  products(skus: [$sku]) {
-    __typename
-    id
-    externalId
-    sku
-    name
-    description
-    shortDescription
-    url
-    urlKey
-    inStock
-    metaTitle
-    metaKeyword
-    metaDescription
-    addToCartAllowed
-    images(roles: []) {
-      url
-      label
-      roles
-    }
-    attributes(roles: []) {
-      name
-      label
-      value
-      roles
-    }
-    ... on SimpleProductView {
-      price {
-        ...priceFields
-      }
-    }
-    ... on ComplexProductView {
-      options {
-        id
-        title
-        required
-        values {
-          id
-          title
-          inStock
-          __typename
-          ...on ProductViewOptionValueSwatch {
-            type
-            value
-          }
-          ... on ProductViewOptionValueProduct {
-            title
-            quantity
-            isDefault
-            product {
-              sku
-              shortDescription
-              metaDescription
-              metaKeyword
-              metaTitle
-              name
-              price {
-                final {
-                  amount {
-                    value
-                    currency
-                  }
-                }
-                regular {
-                  amount {
-                    value
-                    currency
-                  }
-                }
-                roles
-              }
-            }
-          }
-        }
-      }
-      priceRange {
-        maximum {
-          ...priceFields
-        }
-        minimum {
-          ...priceFields
-        }
-      }
-    }
-  }
-}
-${priceFieldsFragment}`;
-
-export const variantsQuery = `
-query($sku: String!) {
-  variants(sku: $sku) {
-    variants {
-      product {
-        sku
-        name
-        inStock
-        images(roles: ["image"]) {
-          url
-        }
-        ...on SimpleProductView {
-          price {
-            final { amount { currency value } }
-          }
-        }
-      }
-    }
-  }
-}
-`;
 
 /* Common functionality */
 
 export async function performCatalogServiceQuery(query, variables) {
   const headers = {
+    ...(await getHeaders('cs')),
     'Content-Type': 'application/json',
-    'Magento-Environment-Id': await getConfigValue('commerce-environment-id'),
-    'Magento-Website-Code': await getConfigValue('commerce-website-code'),
-    'Magento-Store-View-Code': await getConfigValue('commerce-store-view-code'),
-    'Magento-Store-Code': await getConfigValue('commerce-store-code'),
-    'Magento-Customer-Group': await getConfigValue('commerce-customer-group'),
-    'x-api-key': await getConfigValue('commerce-x-api-key'),
   };
 
-  const apiCall = new URL(await getConfigValue('commerce-endpoint'));
+  const apiCall = await commerceEndpointWithQueryParams();
   apiCall.searchParams.append('query', query.replace(/(?:\r\n|\r|\n|\t|[\s]{4})/g, ' ')
     .replace(/\s\s+/g, ' '));
   apiCall.searchParams.append('variables', variables ? JSON.stringify(variables) : null);
@@ -192,7 +64,7 @@ export async function performMonolithGraphQLQuery(query, variables, GET = true, 
 
   const headers = {
     'Content-Type': 'application/json',
-    Store: await getConfigValue('commerce-store-view-code'),
+    Store: await getConfigValue('commerce.headers.cs.Magento-Store-View-Code'),
   };
 
   if (USE_TOKEN) {
@@ -278,22 +150,8 @@ export function getSkuFromUrl() {
   return result?.[1];
 }
 
-const productsCache = {};
-export async function getProduct(sku) {
-  if (productsCache[sku]) {
-    return productsCache[sku];
-  }
-  const rawProductPromise = performCatalogServiceQuery(productDetailQuery, { sku });
-  const productPromise = rawProductPromise.then((productData) => {
-    if (!productData?.products?.[0]) {
-      return null;
-    }
-
-    return productData?.products?.[0];
-  });
-
-  productsCache[sku] = productPromise;
-  return productPromise;
+export function getOptionsUIDsFromUrl() {
+  return new URLSearchParams(window.location.search).get('optionsUIDs')?.split(',');
 }
 
 export async function trackHistory() {
@@ -301,7 +159,7 @@ export async function trackHistory() {
     return;
   }
   // Store product view history in session storage
-  const storeViewCode = await getConfigValue('commerce-store-view-code');
+  const storeViewCode = await getConfigValue('commerce.headers.cs.Magento-Store-View-Code');
   window.adobeDataLayer.push((dl) => {
     dl.addEventListener('adobeDataLayer:change', (event) => {
       if (!event.productContext) {
@@ -352,6 +210,10 @@ export async function loadErrorPage(code = 404) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlText, 'text/html');
   document.body.innerHTML = doc.body.innerHTML;
+  // get dropin styles
+  document.head.querySelectorAll('style[data-dropin]').forEach((style) => {
+    doc.head.appendChild(style);
+  });
   document.head.innerHTML = doc.head.innerHTML;
 
   // https://developers.google.com/search/docs/crawling-indexing/javascript/fix-search-javascript

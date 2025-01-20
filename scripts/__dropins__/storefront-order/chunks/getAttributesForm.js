@@ -1,3 +1,5 @@
+/*! Copyright 2025 Adobe
+All Rights Reserved. */
 import{h as i}from"./network-error.js";import{f as u,h as s}from"./fetch-graphql.js";import{t as m}from"./transform-attributes-form.js";const n=`
   query GET_ATTRIBUTES_FORM($formCode: String!) {
     attributesForm(formCode: $formCode) {
@@ -32,7 +34,7 @@ import{h as i}from"./network-error.js";import{f as u,h as s}from"./fetch-graphql
   }
 `,_=`
   query GET_ATTRIBUTES_FORM_SHORT {
-      attributesForm(formCode: "customer_register_address") {
+    attributesForm(formCode: "customer_register_address") {
       items {
         frontend_input
         label

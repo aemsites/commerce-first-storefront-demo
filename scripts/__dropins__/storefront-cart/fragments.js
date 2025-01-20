@@ -1,4 +1,4 @@
-/*! Copyright 2024 Adobe
+/*! Copyright 2025 Adobe
 All Rights Reserved. */
 const e=`
   fragment PRICE_RANGE_FRAGMENT on PriceRange {
@@ -94,7 +94,11 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       }
       label
     }
-    original_row_total{
+    original_item_price {
+      value
+      currency
+    }
+    original_row_total {
       value
       currency
     }
@@ -107,6 +111,13 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       url
       label
     }
+    url_key
+    canonical_url
+    categories {
+      url_path
+      url_key
+      name
+    }
     custom_attributesV2(filters: {is_visible_on_front: true}){
       items{
         code
@@ -118,13 +129,11 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
             value
             label
           }
-
         }
       }
     }
     only_x_left_in_stock
     stock_status
-
     price_range {
       ...PRICE_RANGE_FRAGMENT
     }
@@ -157,7 +166,6 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       ...CUSTOMIZABLE_OPTIONS_FRAGMENT
     }
   }
-
   ... on BundleCartItem {
     bundle_options {
       uid
@@ -184,7 +192,7 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
 
 ${e}
 ${t}
-`,n=`
+`,r=`
 fragment CART_FRAGMENT on Cart {
   id
   total_quantity
@@ -253,4 +261,4 @@ fragment CART_FRAGMENT on Cart {
 }
 
 ${a}
-`;export{n as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};
+`;export{r as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};

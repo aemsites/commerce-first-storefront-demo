@@ -1,6 +1,18 @@
+/* eslint-disable import/no-unresolved */
+import { events } from '@dropins/tools/event-bus.js';
+import { debounce } from '@dropins/tools/lib.js';
+
 export function scrollToElement(element) {
   element.scrollIntoView({ behavior: 'smooth' });
   element.focus();
+}
+
+export function isCartEmpty(cart) {
+  return cart ? cart.totalQuantity < 1 : true;
+}
+
+export function isCheckoutEmpty(data) {
+  return data ? data.isEmpty : true;
 }
 
 export function getCartAddress(checkoutData, type) {
@@ -18,32 +30,32 @@ export function getCartAddress(checkoutData, type) {
     company: address?.company,
     countryCode: address.country?.value,
     customAttributes: address.customAttributes,
+    fax: address.fax,
     firstName: address.firstName,
     lastName: address.lastName,
+    middleName: address.middleName,
     postcode: address.postCode,
+    prefix: address.prefix,
     region: {
       regionCode: address.region?.code,
       regionId: address.region?.id,
     },
     street: address.street,
+    suffix: address.suffix,
     telephone: address.telephone,
     vatId: address.vatId,
   };
 }
 
 export function getCartDeliveryMethod(data) {
-  if (!data) return;
+  if (!data) return null;
   const shippingAddresses = data.shippingAddresses || [];
-  if (shippingAddresses.length === 0) return;
-  // eslint-disable-next-line consistent-return
+  if (shippingAddresses.length === 0) return null;
   return shippingAddresses[0]?.selectedShippingMethod;
 }
 
-export function setAddressOnCart(values, setCartAddress) {
-  const { data, isDataValid } = values;
+const transformAddressFormValues = (data) => {
   const isNewAddress = !data?.id;
-
-  if (!isDataValid) return;
 
   const customAttributes = data.customAttributes?.map(({ code, value }) => ({
     code,
@@ -51,7 +63,7 @@ export function setAddressOnCart(values, setCartAddress) {
   }));
 
   // TODO: implement new address creation
-  const address = !isNewAddress
+  return !isNewAddress
     ? { customerAddressId: data.id }
     : {
       address: {
@@ -59,21 +71,84 @@ export function setAddressOnCart(values, setCartAddress) {
         company: data?.company,
         countryCode: data.countryCode,
         customAttributes,
-        // TODO fax
+        fax: data.fax,
         firstName: data.firstName,
         lastName: data.lastName,
-        // TODO middleName
+        middleName: data.middleName,
         postcode: data.postcode,
-        // TODO prefix
+        prefix: data.prefix,
         region: data?.region?.regionCode,
         regionId: data?.region?.regionId,
         street: data.street,
-        // TODO suffix
+        suffix: data.suffix,
         telephone: data.telephone,
         vatId: data.vatId,
         saveInAddressBook: data.saveAddressBook,
       },
     };
+};
 
-  setCartAddress(address);
+let ongoingSetAddressCalls = 0;
+export function setAddressOnCart({ api, debounceMs = 0, placeOrderBtn = null }) {
+  const debouncedApi = debounce((address) => {
+    ongoingSetAddressCalls += 1;
+    api(address)
+      .catch(console.error)
+      .finally(() => {
+        ongoingSetAddressCalls -= 1;
+        if (ongoingSetAddressCalls === 0) {
+          placeOrderBtn?.setProps((prev) => ({ ...prev, disabled: false }));
+        }
+      });
+  }, debounceMs);
+
+  return ({ data, isDataValid }) => {
+    if (!isDataValid) return;
+    placeOrderBtn?.setProps((prev) => ({ ...prev, disabled: true }));
+    const address = transformAddressFormValues(data);
+    debouncedApi(address);
+  };
+}
+
+export function estimateShippingCost({ api, debounceMs = 0 }) {
+  let prevEstimateShippingData = {};
+
+  const debouncedApi = debounce((data) => {
+    const criteria = {
+      country_code: data.countryCode,
+      region_name: String(data.region.regionCode || ''),
+      region_id: String(data.region.regionId || ''),
+    };
+
+    api({ criteria });
+
+    events.emit('checkout/estimate-shipping-address', {
+      address: {
+        country_id: data.countryCode,
+        region: String(data.region.regionCode || ''),
+        region_id: String(data.region.regionId || ''),
+        postcode: data.postcode,
+      },
+    });
+
+    prevEstimateShippingData = {
+      countryCode: data.countryCode,
+      regionCode: data.region.regionCode,
+      regionId: data.region.regionId,
+      postcode: data.postcode,
+    };
+  }, debounceMs);
+
+  return ({ data, isDataValid }) => {
+    if (isDataValid) return;
+
+    if (
+      prevEstimateShippingData.countryCode === data.countryCode
+      && prevEstimateShippingData.regionCode === data.region.regionCode
+      && prevEstimateShippingData.regionId === data.region.regionId
+      && prevEstimateShippingData.postcode === data.postcode
+    ) return;
+
+    debouncedApi(data);
+  };
 }
