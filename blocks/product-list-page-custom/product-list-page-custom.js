@@ -536,7 +536,7 @@ class ProductListPage extends Component {
     const { type = 'category' } = props;
 
     return html`<${Fragment}>
-    <${FacetList}
+    <${FacetList} 
       facets=${state.facets}
       filters=${state.filters}
       facetMenuRef=${this.facetMenuRef}

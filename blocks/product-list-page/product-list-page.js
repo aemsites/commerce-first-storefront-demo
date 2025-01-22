@@ -5,7 +5,7 @@ export default async function decorate(block) {
   // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
   await import('/scripts/widgets/search.js');
 
-  const { category, type } = readBlockConfig(block);
+  const { category, urlpath, type } = readBlockConfig(block);
   block.textContent = '';
 
   const storeDetails = {
@@ -44,9 +44,9 @@ export default async function decorate(block) {
     context: {
       customerGroup: await getConfigValue('commerce.headers.cs.Magento-Customer-Group'),
     },
-    route: ({ sku }) => {
+    route: ({ sku, urlKey }) => {
       const a = new URL(window.location.origin);
-      a.pathname = `/products/${sku}`;
+      a.pathname = `/products/${urlKey}/${sku}`;
       return a.toString();
     },
   };
@@ -54,6 +54,7 @@ export default async function decorate(block) {
   if (type !== 'search') {
     storeDetails.config.categoryName = document.querySelector('.default-content-wrapper > h1')?.innerText;
     storeDetails.config.currentCategoryId = category;
+    storeDetails.config.currentCategoryUrlPath = urlpath;
 
     // Enable enrichment
     block.dataset.category = category;
