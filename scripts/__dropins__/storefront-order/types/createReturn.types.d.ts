@@ -21,12 +21,13 @@ export interface CreateReturnProps {
         }>;
     };
     className: string;
-    onSuccess?: (response: onSuccessTypes) => void;
+    onSuccess?: (response: onSuccessTypes | {}) => void;
     onError?: (message: string) => void;
     routeReturnSuccess?: () => string;
     showConfigurableOptions?: (options: options | {}) => options;
 }
 export interface ReturnOrderProductListProps {
+    placeholderImage: string;
     slots?: {
         ReturnOrderItem: SlotProps;
     };
@@ -41,6 +42,7 @@ export interface ReturnOrderProductListProps {
     handleChangeStep: (value: StepsTypes) => void;
 }
 export interface ReturnReasonFormProps {
+    placeholderImage: string;
     slots?: {
         ReturnFormActions: SlotProps<{
             handleChangeStep: (value: StepsTypes) => void;
@@ -61,7 +63,7 @@ export interface ReturnOrderMessageProps {
 }
 export interface UseCreateReturn {
     orderData?: OrderDataModel;
-    onSuccess?: (response: onSuccessTypes) => void;
+    onSuccess?: (response: onSuccessTypes | {}) => void;
     onError?: (message: string) => void;
     handleSetInLineAlert: (value?: InLineAlertProps) => void;
 }

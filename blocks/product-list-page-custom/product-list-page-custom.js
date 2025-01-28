@@ -1,6 +1,6 @@
 import {
   h, Component, Fragment, render, createRef,
-} from '../../scripts/preact.js';
+} from '@dropins/tools/preact.js';
 import htm from '../../scripts/htm.js';
 import ProductList from './ProductList.js';
 import FacetList from './FacetList.js';
@@ -536,7 +536,7 @@ class ProductListPage extends Component {
     const { type = 'category' } = props;
 
     return html`<${Fragment}>
-    <${FacetList}
+    <${FacetList} 
       facets=${state.facets}
       filters=${state.filters}
       facetMenuRef=${this.facetMenuRef}

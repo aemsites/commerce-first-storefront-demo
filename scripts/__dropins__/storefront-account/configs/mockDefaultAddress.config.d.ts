@@ -1,3 +1,19 @@
+/********************************************************************
+ * ADOBE CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright 2024 Adobe
+ *  All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Adobe and its suppliers, if any. The intellectual
+ * and technical concepts contained herein are proprietary to Adobe
+ * and its suppliers and are protected by all applicable intellectual
+ * property laws, including trade secret and copyright laws.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Adobe.
+ *******************************************************************/
 export declare const mockResponseInputFieldsList: ({
     default_value: null;
     entity_type: string;
@@ -94,6 +110,10 @@ export declare const mockDefaultAddress: {
     streetMultiline_2: string;
     defaultShipping: boolean;
     defaultBilling: boolean;
+    fax: string;
+    middlename: string;
+    prefix: string;
+    suffix: string;
 };
 export declare const mockResponseAddressWithText: {
     firstname: string;
@@ -114,45 +134,10 @@ export declare const mockResponseAddressWithText: {
     default_shipping: boolean;
     default_billing: boolean;
     custom_attributesV2: never[];
-};
-export declare const mockResponseAddressEmpty: {
-    firstname: string;
-    lastname: string;
-    city: string;
-    company: string;
-    country_code: string;
-    region: {
-        region: string;
-        region_code: string;
-        region_id: string;
-    };
-    telephone: string;
-    id: string;
-    vat_id: string;
-    postcode: string;
-    street: string[];
-    default_shipping: boolean;
-    default_billing: boolean;
-    custom_attributesV2: never[];
-};
-export declare const mockDefaultAddressEmpty: {
-    firstname: string;
-    lastname: string;
-    city: string;
-    company: string;
-    countryCode: string;
-    region: {
-        region: string;
-        regionCode: string;
-        regionId: string;
-    };
-    telephone: string;
-    id: string;
-    vatId: string;
-    postcode: string;
-    street: string;
-    defaultShipping: boolean;
-    defaultBilling: boolean;
+    fax: string;
+    middlename: string;
+    prefix: string;
+    suffix: string;
 };
 export declare const mockResponseCountries: {
     two_letter_abbreviation: string;
