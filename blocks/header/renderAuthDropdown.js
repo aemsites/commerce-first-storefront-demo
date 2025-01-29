@@ -6,14 +6,14 @@ import { events } from '@dropins/tools/event-bus.js';
 import { getCookie } from '../../scripts/configs.js';
 import { CUSTOMER_FORGOTPASSWORD_PATH } from '../../scripts/constants.js';
 
-function checkAndRedirect(checkUrl, redirectUrl) {
-  // If the user is on the dashboard page and initiates logout,
-  // they will be redirected to the login page.
-  const currentUrl = window.location.pathname;
-
-  if (currentUrl.includes(checkUrl)) {
-    window.location.href = `${window.location.origin}${redirectUrl}`;
-  }
+function checkAndRedirect(redirections) {
+  Object.entries(redirections).some(([currentPath, redirectPath]) => {
+    if (window.location.pathname.includes(currentPath)) {
+      window.location.href = redirectPath;
+      return true;
+    }
+    return false;
+  });
 }
 
 function renderSignIn(element) {
@@ -27,14 +27,11 @@ function renderSignIn(element) {
 export function renderAuthDropdown(navTools) {
   const dropdownElement = document.createRange().createContextualFragment(`
  <div class="dropdown-wrapper nav-tools-wrapper">
-    <button type="button" class="nav-dropdown-button"></button>
+    <button type="button" class="nav-dropdown-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="login-modal"></button>
     <div class="nav-auth-menu-panel nav-tools-panel">
       <div id="auth-dropin-container"></div>
       <ul class="authenticated-user-menu">
          <li><a href="/customer/account">My Account</a></li>
-          <li>
-            <a href="/products/hollister-backyard-sweatshirt/MH05">Product page</a>
-          </li>
           <li><button>Logout</button></li>
       </ul>
     </div>
@@ -43,10 +40,14 @@ export function renderAuthDropdown(navTools) {
   navTools.append(dropdownElement);
 
   const authDropDownPanel = navTools.querySelector('.nav-auth-menu-panel');
-  const authDropDownMenuList = navTools.querySelector('.authenticated-user-menu');
+  const authDropDownMenuList = navTools.querySelector(
+    '.authenticated-user-menu',
+  );
   const authDropinContainer = navTools.querySelector('#auth-dropin-container');
   const loginButton = navTools.querySelector('.nav-dropdown-button');
-  const logoutButtonElement = navTools.querySelector('.authenticated-user-menu > li > button');
+  const logoutButtonElement = navTools.querySelector(
+    '.authenticated-user-menu > li > button',
+  );
 
   authDropDownPanel.addEventListener('click', (e) => e.stopPropagation());
 
@@ -54,6 +55,11 @@ export function renderAuthDropdown(navTools) {
     const show = state ?? !authDropDownPanel.classList.contains('nav-tools-panel--show');
 
     authDropDownPanel.classList.toggle('nav-tools-panel--show', show);
+    authDropDownPanel.setAttribute('role', 'dialog');
+    authDropDownPanel.setAttribute('aria-hidden', 'false');
+    authDropDownPanel.setAttribute('aria-labelledby', 'modal-title');
+    authDropDownPanel.setAttribute('aria-describedby', 'modal-description');
+    authDropDownPanel.focus();
   }
 
   loginButton.addEventListener('click', () => toggleDropDownAuthMenu());
@@ -68,7 +74,10 @@ export function renderAuthDropdown(navTools) {
 
   logoutButtonElement.addEventListener('click', async () => {
     await authApi.revokeCustomerToken();
-    checkAndRedirect('/customer', '/customer/login');
+    checkAndRedirect({
+      '/customer': '/customer/login',
+      '/order-details': '/',
+    });
   });
 
   renderSignIn(authDropinContainer);
@@ -89,6 +98,7 @@ export function renderAuthDropdown(navTools) {
           width="25"
           height="25"
           viewBox="0 0 24 24"
+          aria-label="My Account"
           >
           <g fill="none" stroke="#000000" stroke-width="1.5">
           <circle cx="12" cy="6" r="4"></circle>

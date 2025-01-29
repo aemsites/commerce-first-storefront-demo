@@ -162,17 +162,6 @@ header nav .nav-sections a {
   text-decoration: none;
 }
 
-header nav .nav-sections a:hover {
-  color: var(--color-brand-700);
-  text-decoration: none;
-}
-
-header nav .nav-brand a:hover {
-  color: var(--color-neutral-100);
-  border: 0 none;
-  text-decoration: none;
-}
-
 header nav .nav-brand img {
   width: 130px;
   height: auto;
@@ -214,6 +203,19 @@ header nav .nav-sections ul > li > ul {
 header nav .nav-sections ul > li > ul > li {
   font-weight: 500;
 }
+
+header nav .nav-sections a:hover {
+  color: var(--color-brand-700);
+  text-decoration: none;
+}
+
+header nav .nav-brand a:hover {
+  color: var(--color-neutral-100);
+  border: 0 none;
+  text-decoration: none;
+}
+
+
 
 @media (width >= 900px) {
   header nav .nav-sections {

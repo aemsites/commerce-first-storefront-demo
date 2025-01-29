@@ -22,32 +22,35 @@ export default function decorate(block) {
     block.innerHTML = '';
 
     data.forEach((item) => {
-      const picture = createOptimizedPicture(item.image, '', false, [{ width: 1000 }]);
+      const picture = createOptimizedPicture(item.image, '', false, [
+        { width: 1000 },
+      ]);
       picture.lastElementChild.width = '1000';
       picture.lastElementChild.height = '1000';
 
       // Convert hard-coded product name to product URL
-      const productUrl = `/products/${item.sku}`;
+      const productName = item.name.toLowerCase().replace(/ /g, '-');
+      const productUrl = `/products/${productName}/${item.sku}`;
       const createdCard = document.createElement('div');
       createdCard.classList.add('wide-card');
       createdCard.innerHTML = `
-        <div class="card-image">
-          <a href="${productUrl}">
+        <div class='card-image'>
+          <a href='${productUrl}'>
             ${picture.outerHTML}
           </a>
         </div>
-        <div class="card-info">
-          <a href="${productUrl}">
+        <div class='card-info'>
+          <a href='${productUrl}'>
             <h2>${item.name}</h2>
           </a>
-          <p class="card-item-sku">${item.sku}</p>
-          <p class="card-item-description">${item.description}</p>
+          <p class='card-item-sku'>${item.sku}</p>
+          <p class='card-item-description'>${item.description}</p>
 
-          <p class="button-container">
+          <p class='button-container'>
             <a
-              class="button add-to-cart"
-              href="javascript:void(0)"
-              data-sku="${item.sku}"
+              class='button add-to-cart'
+              href='javascript:void(0)'
+              data-sku='${item.sku}'
             >
                 Add to cart
             </a>

@@ -1,56 +1,45 @@
-import{n as $,f as d,l,m as _,k as I}from"./removeCustomerAddress.js";const y=t=>{var r,m,u,c,i,h,C,f,e,o,E,g,T,S,w,n,O,P,b,A,R,U,N;const a=(u=(m=(r=t==null?void 0:t.data)==null?void 0:r.customer)==null?void 0:m.custom_attributes)==null?void 0:u.reduce((G,M)=>(G[$(M.code)]=M.value??"",G),{});return{email:((i=(c=t==null?void 0:t.data)==null?void 0:c.customer)==null?void 0:i.email)||"",firstName:((C=(h=t==null?void 0:t.data)==null?void 0:h.customer)==null?void 0:C.firstname)||"",lastName:((e=(f=t==null?void 0:t.data)==null?void 0:f.customer)==null?void 0:e.lastname)||"",middleName:((E=(o=t==null?void 0:t.data)==null?void 0:o.customer)==null?void 0:E.middlename)||"",gender:(T=(g=t==null?void 0:t.data)==null?void 0:g.customer)==null?void 0:T.gender,dob:((w=(S=t==null?void 0:t.data)==null?void 0:S.customer)==null?void 0:w.dob)||"",dateOfBirth:((O=(n=t==null?void 0:t.data)==null?void 0:n.customer)==null?void 0:O.date_of_birth)||"",prefix:((b=(P=t==null?void 0:t.data)==null?void 0:P.customer)==null?void 0:b.prefix)||"",suffix:((R=(A=t==null?void 0:t.data)==null?void 0:A.customer)==null?void 0:R.suffix)||"",createdAt:((N=(U=t==null?void 0:t.data)==null?void 0:U.customer)==null?void 0:N.created_at)||"",...a}},v=t=>{var a,r,m,u;return{minLength:+((r=(a=t==null?void 0:t.data)==null?void 0:a.storeConfig)==null?void 0:r.minimum_password_length)||3,requiredCharacterClasses:+((u=(m=t==null?void 0:t.data)==null?void 0:m.storeConfig)==null?void 0:u.required_character_classes_number)||0}},x=`
-  fragment BasicCustomerInfo on Customer {
-    date_of_birth
-    email
-    firstname
-    gender
-    lastname
-    middlename
-    prefix
-    suffix
-    created_at
-  }
-`,D=`
+/*! Copyright 2025 Adobe
+All Rights Reserved. */
+import{m as y,f as C,l as o,k as h,n as x}from"./removeCustomerAddress.js";import{BASIC_CUSTOMER_INFO_FRAGMENT as F}from"../fragments.js";import{c as V}from"./getStoreConfig.js";import"@dropins/tools/event-bus.js";import{merge as k}from"@dropins/tools/lib.js";const B=t=>{var r,u,i,d,_,f,E,S,T,w,e,g,O,P,A,M,U,R,b,N,$,G,v,D,c,I;const m=(i=(u=(r=t==null?void 0:t.data)==null?void 0:r.customer)==null?void 0:u.custom_attributes)==null?void 0:i.filter(l=>l).reduce((l,n)=>(l[y(n.code)]=n.value??"",l),{}),a={email:((_=(d=t==null?void 0:t.data)==null?void 0:d.customer)==null?void 0:_.email)||"",firstName:((E=(f=t==null?void 0:t.data)==null?void 0:f.customer)==null?void 0:E.firstname)||"",lastName:((T=(S=t==null?void 0:t.data)==null?void 0:S.customer)==null?void 0:T.lastname)||"",middleName:((e=(w=t==null?void 0:t.data)==null?void 0:w.customer)==null?void 0:e.middlename)||"",gender:((O=(g=t==null?void 0:t.data)==null?void 0:g.customer)==null?void 0:O.gender)||"1",dateOfBirth:((A=(P=t==null?void 0:t.data)==null?void 0:P.customer)==null?void 0:A.date_of_birth)||"",prefix:((U=(M=t==null?void 0:t.data)==null?void 0:M.customer)==null?void 0:U.prefix)||"",suffix:((b=(R=t==null?void 0:t.data)==null?void 0:R.customer)==null?void 0:b.suffix)||"",createdAt:(($=(N=t==null?void 0:t.data)==null?void 0:N.customer)==null?void 0:$.created_at)||"",...m};return k(a,(I=(c=(D=(v=(G=V)==null?void 0:G.getConfig())==null?void 0:v.models)==null?void 0:D.CustomerDataModelShort)==null?void 0:c.transformer)==null?void 0:I.call(c,t.data))},L=`
   query GET_CUSTOMER {
-  customer {
-    ...BasicCustomerInfo
+    customer {
+      ...BASIC_CUSTOMER_INFO_FRAGMENT
       custom_attributes {
-    ... on AttributeValue {
+        ... on AttributeValue {
+          code
+          value
+        }
         code
-        value
       }
-      code
-     }
     }
   }
-${x}`,k=async()=>await d(D,{method:"GET",cache:"no-cache"}).then(t=>{var a;return(a=t.errors)!=null&&a.length?l(t.errors):y(t)}).catch(_),q=`
-  mutation CHANGE_CUSTOMER_PASSWORD($currentPassword: String!, $newPassword: String!) {
-    changeCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+  ${F}
+`,X=async()=>await C(L,{method:"GET",cache:"no-cache"}).then(t=>{var m;return(m=t.errors)!=null&&m.length?o(t.errors):B(t)}).catch(h),H=`
+  mutation CHANGE_CUSTOMER_PASSWORD(
+    $currentPassword: String!
+    $newPassword: String!
+  ) {
+    changeCustomerPassword(
+      currentPassword: $currentPassword
+      newPassword: $newPassword
+    ) {
       email
     }
   }
-`,H=async({currentPassword:t,newPassword:a})=>await d(q,{method:"POST",variables:{currentPassword:t,newPassword:a}}).then(r=>{var m,u,c;return(m=r.errors)!=null&&m.length?l(r.errors):((c=(u=r==null?void 0:r.data)==null?void 0:u.changeCustomerPassword)==null?void 0:c.email)||""}).catch(_),F=`
-  query GET_STORE_CONFIG {
-    storeConfig {
-      autocomplete_on_storefront
-      minimum_password_length
-      required_character_classes_number
-    }
-  }
-`,W=async()=>await d(F,{method:"GET",cache:"force-cache"}).then(t=>{var a;return(a=t.errors)!=null&&a.length?l(t.errors):v(t)}).catch(_),V=`
-  mutation UPDATE_CUSTOMER_EMAIL($email: String! $password: String!) {
-    updateCustomerEmail(email:$email password:$password) {
+`,Y=async({currentPassword:t,newPassword:m})=>await C(H,{method:"POST",variables:{currentPassword:t,newPassword:m}}).then(a=>{var r,u,i;return(r=a.errors)!=null&&r.length?o(a.errors):((i=(u=a==null?void 0:a.data)==null?void 0:u.changeCustomerPassword)==null?void 0:i.email)||""}).catch(h),W=`
+  mutation UPDATE_CUSTOMER_EMAIL($email: String!, $password: String!) {
+    updateCustomerEmail(email: $email, password: $password) {
       customer {
-       email
+        email
       }
     }
   }
-`,K=async({email:t,password:a})=>await d(V,{method:"POST",variables:{email:t,password:a}}).then(r=>{var m,u,c,i;return(m=r.errors)!=null&&m.length?l(r.errors):((i=(c=(u=r==null?void 0:r.data)==null?void 0:u.updateCustomerEmail)==null?void 0:c.customer)==null?void 0:i.email)||""}).catch(_),B=`
+`,Z=async({email:t,password:m})=>await C(W,{method:"POST",variables:{email:t,password:m}}).then(a=>{var r,u,i,d;return(r=a.errors)!=null&&r.length?o(a.errors):((d=(i=(u=a==null?void 0:a.data)==null?void 0:u.updateCustomerEmail)==null?void 0:i.customer)==null?void 0:d.email)||""}).catch(h),q=`
   mutation UPDATE_CUSTOMER_V2($input: CustomerUpdateInput!) {
-    updateCustomerV2(input:$input) {
+    updateCustomerV2(input: $input) {
       customer {
-       email
+        email
       }
     }
   }
-`,Q=async t=>await d(B,{method:"POST",variables:{input:I(t,"snakeCase",{firstName:"firstname",lastName:"lastname",middleName:"middlename",custom_attributesV2:"custom_attributes"})}}).then(a=>{var r,m,u,c;return(r=a.errors)!=null&&r.length?l(a.errors):((c=(u=(m=a==null?void 0:a.data)==null?void 0:m.updateCustomerV2)==null?void 0:u.customer)==null?void 0:c.email)||""}).catch(_);export{W as a,K as b,Q as c,k as g,H as u};
+`,s=async t=>await C(q,{method:"POST",variables:{input:x(t,"snakeCase",{firstName:"firstname",lastName:"lastname",middleName:"middlename",dob:"date_of_birth",custom_attributesV2:"custom_attributes"})}}).then(m=>{var a,r,u,i;return(a=m.errors)!=null&&a.length?o(m.errors):((i=(u=(r=m==null?void 0:m.data)==null?void 0:r.updateCustomerV2)==null?void 0:u.customer)==null?void 0:i.email)||""}).catch(h);export{Z as a,s as b,X as g,Y as u};
