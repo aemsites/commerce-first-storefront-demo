@@ -10,7 +10,7 @@ import * as authApi from '@dropins/storefront-auth/api.js';
 import { initializers } from '@dropins/tools/initializer.js';
 
 // Libs
-import { getConfigValue, getCookie } from '../configs.js';
+import { getCookie } from '../configs.js';
 
 export const getUserTokenCookie = () => getCookie('auth_dropin_user_token');
 

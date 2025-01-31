@@ -107,7 +107,12 @@ export async function performMonolithGraphQLQuery(query, variables, GET = true, 
   return response.json();
 }
 
-export function renderPrice(product, format, html = (strings, ...values) => strings.reduce((result, string, i) => result + string + (values[i] || ''), ''), Fragment = null) {
+export function renderPrice(
+  product,
+  format,
+  html = (strings, ...values) => strings.reduce((result, string, i) => result + string + (values[i] || ''), ''),
+  Fragment = null,
+) {
   // Simple product
   if (product.price) {
     const { regular, final } = product.price;
