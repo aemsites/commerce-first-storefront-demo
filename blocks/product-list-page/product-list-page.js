@@ -9,10 +9,12 @@ export default async function decorate(block) {
   block.textContent = '';
 
   const storeDetails = {
-    environmentId: await getConfigValue('commerce-environment-id'),
+    // environmentId: await getConfigValue('commerce-environment-id'),
+    environmentId: 'S3p68TS6gjfFTULEvg5prB',
     environmentType: (await getConfigValue('commerce-environment')) || '',
-    apiKey: await getConfigValue('commerce-x-api-key'),
-    apiUrl: await getConfigValue('commerce-endpoint'),
+    // apiKey: await getConfigValue('commerce-x-api-key'),
+    // apiUrl: await getConfigValue('commerce-endpoint'),
+    apiUrl: 'https://core-commerce-saas-storefront-router-service.corp.ethos501-stage-va6.ethos.adobe.net/RkqtvKRWGepUBng8J9bYVk/graphql',
     websiteCode: await getConfigValue('commerce-website-code'),
     storeCode: await getConfigValue('commerce-store-code'),
     storeViewCode: await getConfigValue('commerce-store-view-code'),
@@ -29,7 +31,7 @@ export default async function decorate(block) {
       displayOutOfStock: true,
       allowAllProducts: false,
       imageCarousel: false,
-      optimizeImages: true,
+      optimizeImages: false,
       imageBaseWidth: 200,
       listview: true,
       displayMode: '', // "" for plp || "PAGE" for category/catalog
@@ -43,7 +45,8 @@ export default async function decorate(block) {
       },
     },
     context: {
-      customerGroup: await getConfigValue('commerce-customer-group'),
+      // customerGroup: await getConfigValue('commerce-customer-group'),
+      customerGroup: 'b6589fc6ab0dc82cf12099d1c2d40ab994e8410c',
     },
     route: ({ sku }) => {
       const a = new URL(window.location.origin);

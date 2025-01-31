@@ -7,6 +7,7 @@ import {
   setFetchGraphQlHeader,
 } from '@dropins/tools/fetch-graphql.js';
 import * as authApi from '@dropins/storefront-auth/api.js';
+import { initializers } from '@dropins/tools/initializer.js';
 
 // Libs
 import { getConfigValue, getCookie } from '../configs.js';
@@ -38,6 +39,18 @@ export default async function initializeDropins() {
   // Cache cart data in session storage
   events.on('cart/data', persistCartDataInSession, { eager: true });
 
+  initializers.setImageParamKeys({
+    rotate: 'rotate',
+    crop: 'crop',
+    flip: 'flip',
+    size: 'size',
+    preferwebp: 'preferwebp',
+    // height: 'height',
+    //    width: 'width',
+    quality: 'quality',
+    smartcrop: 'smartcrop',
+  });
+
   // on page load, check if user is authenticated
   const token = getUserTokenCookie();
   // set auth headers
@@ -48,7 +61,10 @@ export default async function initializeDropins() {
   // Event Bus Logger
   events.enableLogger(true);
   // Set Fetch Endpoint (Global)
-  setEndpoint(await getConfigValue('commerce-core-endpoint'));
+  // setEndpoint(await getConfigValue('commerce-core-endpoint'));
+  // const endpoint = 'https://na1-ccsaas-service-qa.commerce-core-saas.com/RkqtvKRWGepUBng8J9bYVk/graphql';
+  const endpoint = 'https://core-commerce-saas-storefront-router-service.corp.ethos501-stage-va6.ethos.adobe.net/RkqtvKRWGepUBng8J9bYVk/graphql?ac-storecode=main_website_store';
+  setEndpoint(endpoint);
 
   events.on('eds/lcp', async () => {
     // Recaptcha
