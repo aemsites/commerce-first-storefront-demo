@@ -166,15 +166,6 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       ...CUSTOMIZABLE_OPTIONS_FRAGMENT
     }
   }
-  ... on DownloadableCartItem {
-    links {
-      sort_order
-      title
-    }
-    customizable_options {
-      ...CUSTOMIZABLE_OPTIONS_FRAGMENT
-    }
-  }
   ... on BundleCartItem {
     bundle_options {
       uid
