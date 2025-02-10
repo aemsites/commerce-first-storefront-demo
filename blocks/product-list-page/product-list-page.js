@@ -5,20 +5,17 @@ export default async function decorate(block) {
   // eslint-disable-next-line import/no-absolute-path, import/no-unresolved
   await import('/scripts/widgets/search.js');
 
-  const { category, type } = readBlockConfig(block);
+  const { category, urlpath, type } = readBlockConfig(block);
   block.textContent = '';
 
   const storeDetails = {
-    // environmentId: await getConfigValue('commerce-environment-id'),
-    environmentId: 'S3p68TS6gjfFTULEvg5prB',
-    environmentType: (await getConfigValue('commerce-environment')) || '',
-    // apiKey: await getConfigValue('commerce-x-api-key'),
-    // apiUrl: await getConfigValue('commerce-endpoint'),
-    apiUrl: 'https://core-commerce-saas-storefront-router-service.corp.ethos501-stage-va6.ethos.adobe.net/RkqtvKRWGepUBng8J9bYVk/graphql',
-    websiteCode: await getConfigValue('commerce-website-code'),
-    storeCode: await getConfigValue('commerce-store-code'),
-    storeViewCode: await getConfigValue('commerce-store-view-code'),
-    productViewOnly: true,
+    environmentId: await getConfigValue('commerce.headers.cs.Magento-Environment-Id'),
+    environmentType: (await getConfigValue('commerce-endpoint')).includes('sandbox') ? 'testing' : '',
+    apiKey: await getConfigValue('commerce.headers.cs.x-api-key'),
+    apiUrl: await getConfigValue('commerce-endpoint'),
+    websiteCode: await getConfigValue('commerce.headers.cs.Magento-Website-Code'),
+    storeCode: await getConfigValue('commerce.headers.cs.Magento-Store-Code'),
+    storeViewCode: await getConfigValue('commerce.headers.cs.Magento-Store-View-Code'),
     config: {
       pageSize: 8,
       perPageConfig: {
@@ -31,7 +28,7 @@ export default async function decorate(block) {
       displayOutOfStock: true,
       allowAllProducts: false,
       imageCarousel: false,
-      optimizeImages: false,
+      optimizeImages: true,
       imageBaseWidth: 200,
       listview: true,
       displayMode: '', // "" for plp || "PAGE" for category/catalog
@@ -45,12 +42,11 @@ export default async function decorate(block) {
       },
     },
     context: {
-      // customerGroup: await getConfigValue('commerce-customer-group'),
-      customerGroup: 'b6589fc6ab0dc82cf12099d1c2d40ab994e8410c',
+      customerGroup: await getConfigValue('commerce.headers.cs.Magento-Customer-Group'),
     },
-    route: ({ sku }) => {
+    route: ({ sku, urlKey }) => {
       const a = new URL(window.location.origin);
-      a.pathname = `/products/${sku}/${sku}`;
+      a.pathname = `/products/${urlKey}/${sku}`;
       return a.toString();
     },
   };
@@ -58,6 +54,7 @@ export default async function decorate(block) {
   if (type !== 'search') {
     storeDetails.config.categoryName = document.querySelector('.default-content-wrapper > h1')?.innerText;
     storeDetails.config.currentCategoryId = category;
+    storeDetails.config.currentCategoryUrlPath = urlpath;
 
     // Enable enrichment
     block.dataset.category = category;
