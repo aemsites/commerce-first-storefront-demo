@@ -22,13 +22,9 @@ export const priceFieldsFragment = `fragment priceFields on ProductViewPrice {
 }`;
 
 export async function commerceEndpointWithQueryParams() {
-  const endpoint = 'https://core-commerce-saas-storefront-router-service.corp.ethos501-stage-va6.ethos.adobe.net/RkqtvKRWGepUBng8J9bYVk/graphql';
-  // const urlWithQueryParams = new URL(await getConfigValue('commerce-endpoint'));
-  const urlWithQueryParams = new URL(endpoint);
+  const urlWithQueryParams = new URL(await getConfigValue('commerce-endpoint'));
   // Set some query parameters for use as a cache-buster. No other purpose.
-  // urlWithQueryParams.searchParams.append('ac-storecode',
-  // await getConfigValue('commerce.headers.cs.Magento-Store-Code'));
-  urlWithQueryParams.searchParams.append('ac-storecode', 'main_website_store');
+  urlWithQueryParams.searchParams.append('ac-storecode', await getConfigValue('commerce.headers.cs.Magento-Store-Code'));
   return urlWithQueryParams;
 }
 
@@ -109,12 +105,7 @@ export async function performMonolithGraphQLQuery(query, variables, GET = true, 
   return response.json();
 }
 
-export function renderPrice(
-  product,
-  format,
-  html = (strings, ...values) => strings.reduce((result, string, i) => result + string + (values[i] || ''), ''),
-  Fragment = null,
-) {
+export function renderPrice(product, format, html = (strings, ...values) => strings.reduce((result, string, i) => result + string + (values[i] || ''), ''), Fragment = null) {
   // Simple product
   if (product.price) {
     const { regular, final } = product.price;
