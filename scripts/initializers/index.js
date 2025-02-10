@@ -10,7 +10,7 @@ import * as authApi from '@dropins/storefront-auth/api.js';
 import { initializers } from '@dropins/tools/initializer.js';
 
 // Libs
-import { getCookie } from '../configs.js';
+import { getConfigValue, getCookie } from '../configs.js';
 
 export const getUserTokenCookie = () => getCookie('auth_dropin_user_token');
 
@@ -61,10 +61,7 @@ export default async function initializeDropins() {
   // Event Bus Logger
   events.enableLogger(true);
   // Set Fetch Endpoint (Global)
-  // setEndpoint(await getConfigValue('commerce-core-endpoint'));
-  // const endpoint = 'https://na1-ccsaas-service-qa.commerce-core-saas.com/RkqtvKRWGepUBng8J9bYVk/graphql';
-  const endpoint = 'https://core-commerce-saas-storefront-router-service.corp.ethos501-stage-va6.ethos.adobe.net/RkqtvKRWGepUBng8J9bYVk/graphql?ac-storecode=main_website_store';
-  setEndpoint(endpoint);
+  setEndpoint(await getConfigValue('commerce-core-endpoint'));
 
   events.on('eds/lcp', async () => {
     // Recaptcha
