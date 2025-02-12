@@ -16,6 +16,7 @@ export default async function decorate(block) {
     websiteCode: await getConfigValue('commerce.headers.cs.Magento-Website-Code'),
     storeCode: await getConfigValue('commerce.headers.cs.Magento-Store-Code'),
     storeViewCode: await getConfigValue('commerce.headers.cs.Magento-Store-View-Code'),
+    productViewOnly: true,
     config: {
       pageSize: 8,
       perPageConfig: {
