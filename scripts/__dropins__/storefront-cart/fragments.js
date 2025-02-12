@@ -1,6 +1,4 @@
-/*! Copyright 2025 Adobe
-All Rights Reserved. */
-const e=`
+const e = `
   fragment PRICE_RANGE_FRAGMENT on PriceRange {
     minimum_price {
       regular_price {
@@ -31,7 +29,7 @@ const e=`
       }
     }
   }
-`,t=`
+`, t = `
   fragment CUSTOMIZABLE_OPTIONS_FRAGMENT on SelectedCustomizableOption {
     type
     customizable_option_uid
@@ -40,15 +38,14 @@ const e=`
     values {
       label
       value
-      price{
+      price {
         type
         units
         value
       }
     }
   }
-`,a=`
-fragment CART_ITEM_FRAGMENT on CartItemInterface {
+`, a = (``), r = `fragment CART_ITEM_FRAGMENT on CartItemInterface {
   __typename
   uid
   quantity
@@ -58,7 +55,6 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
     code
     message
   }
-
   prices {
     price {
       value
@@ -103,7 +99,6 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       currency
     }
   }
-
   product {
     name
     sku
@@ -118,13 +113,13 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       url_key
       name
     }
-    custom_attributesV2(filters: {is_visible_on_front: true}){
-      items{
+    custom_attributesV2(filters: {is_visible_on_front: true}) {
+      items {
         code
-        ...on AttributeValue{
+        ... on AttributeValue {
           value
         }
-        ...on AttributeSelectedOptions{
+        ... on AttributeSelectedOptions {
           selected_options {
             value
             label
@@ -138,7 +133,7 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
       ...PRICE_RANGE_FRAGMENT
     }
   }
-  ...on SimpleCartItem {
+  ... on SimpleCartItem {
     customizable_options {
       ...CUSTOMIZABLE_OPTIONS_FRAGMENT
     }
@@ -182,18 +177,16 @@ fragment CART_ITEM_FRAGMENT on CartItemInterface {
     recipient_name
     sender_email
     sender_name
-    amount{
+    amount {
       currency
       value
     }
     is_available
   }
 }
-
 ${e}
 ${t}
-`,r=`
-fragment CART_FRAGMENT on Cart {
+${a}`, n = `fragment CART_FRAGMENT on Cart {
   id
   total_quantity
   is_virtual
@@ -240,11 +233,7 @@ fragment CART_FRAGMENT on Cart {
   applied_coupons {
     code
   }
-  itemsV2 (
-      pageSize:$pageSize,
-      currentPage:$currentPage,
-      sort: $itemsSortInput
-    ) {
+  itemsV2(pageSize: $pageSize, currentPage: $currentPage, sort: $itemsSortInput) {
     items {
       ...CART_ITEM_FRAGMENT
     }
@@ -259,6 +248,9 @@ fragment CART_FRAGMENT on Cart {
     postcode
   }
 }
-
-${a}
-`;export{r as CART_FRAGMENT,a as CART_ITEM_FRAGMENT};
+${r}`;
+export {
+n as CART_FRAGMENT,
+r as CART_ITEM_FRAGMENT,
+a as DOWNLOADABLE_CART_ITEMS_FRAGMENT
+};
