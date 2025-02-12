@@ -15,10 +15,10 @@
 /* stylelint-disable no-empty-source */
 :root, .dropin-design {
   /* Adobe Commerce Dropin design tokens */
-  --color-brand-300: #7A6AFD;
-  --color-brand-500: #6338EE;
-  --color-brand-600: #5424DB;
-  --color-brand-700: #4513BF;
+  --color-brand-300: #6d6d6d;
+  --color-brand-500: #454545;
+  --color-brand-600: #383838;
+  --color-brand-700: #2b2b2b;
   --color-neutral-50: #fff;
   --color-neutral-100: #fafafa;
   --color-neutral-200: #f5f5f5;
@@ -100,14 +100,11 @@
   --type-display-3-font: normal normal 300 3.4rem/4rem
     var(--type-base-font-family);
   --type-display-3-letter-spacing: 0.04em;
-  --type-headline-1-font: normal normal 400 2.4rem/3.2rem
-  var(--type-base-font-family);
+  --type-headline-1-font: normal normal 400 2.4rem/3.2rem var(--type-condensed-font-family);
   --type-headline-1-letter-spacing: 0.04em;
-  --type-headline-2-default-font: normal normal 300 2rem/2.4rem
-  var(--type-base-font-family);
+  --type-headline-2-default-font: normal normal 300 2.0rem/2.4rem var(--type-condensed-font-family);
   --type-headline-2-default-letter-spacing: 0.04em;
-  --type-headline-2-strong-font: normal normal 400 2rem/2.4rem
-  var(--type-base-font-family);
+  --type-headline-2-strong-font: normal normal 400 2.0rem/2.4rem var(--type-condensed-font-family);
   --type-headline-2-strong-letter-spacing: 0.04em;
   --type-body-1-default-font: normal normal 300 1.6rem/2.4rem
     var(--type-base-font-family);
@@ -147,9 +144,10 @@
   --type-fixed-font-family: adobe-clean, 'Roboto Mono', menlo, consolas, 'Liberation Mono',
     monospace;
   --background-color: var(--color-neutral-50);
-  --nav-height: 11rem;
+  --nav-height: 6.4rem;
 }
 
+/* fallback fonts */
 @font-face {
     font-family: adobe-clean;
     font-style: normal;
@@ -265,30 +263,6 @@ h6 {
   letter-spacing: var(--type-headline-2-default-letter-spacing);
 }
 
-main .section h1::after,
-main .section h2::after,
-main .section h3::after,
-main .section h4::after,
-main .section h5::after,
-main .section h6::after {
-  border-bottom: var(--shape-border-width-2) solid var(--color-brand-500);
-  padding-top: var(--spacing-small);
-  content: "";
-  display: block;
-  width: 200px;
-}
-
-main .section .dropin-design h1::after,
-main .section .dropin-design h2::after,
-main .section .dropin-design h3::after,
-main .section .dropin-design h4::after,
-main .section .dropin-design h5::after,
-main .section .dropin-design h6::after {
-  border: 0 none;
-  padding-top: 0;
-  width: auto;
-}
-
 p,
 dl,
 ol,
@@ -307,15 +281,10 @@ hr {
 }
 
 code,
-pre,
-samp {
+pre {
   font: var(--type-body-2-default-font);
   letter-spacing: var(--type-body-2-default-letter-spacing);
-}
-
-code,
-samp {
-  padding: 0.125em;
+  font-family: var(--type-fixed-font-family);
 }
 
 pre {
@@ -347,27 +316,12 @@ a:not(.dropin-design a) {
   font: var(--type-body-1-strong-font);
   letter-spacing: var(--type-body-1-strong-letter-spacing);
   text-decoration: none;
+  word-break: break-word;
 }
 
 a:not(.dropin-design a):hover {
-  text-decoration: solid underline var(--color-brand-700);
-  text-underline-offset: 6px;
-  color: var(--color-brand-700);
-}
-
-a:not(.dropin-design a):focus-visible {
-  outline: solid var(--shape-border-width-4) var(--color-neutral-400);
-  border: var(--shape-border-width-1) solid var(--color-neutral-800);
-  border-radius: var(--shape-border-radius-1);
-}
-
-u {
-  text-underline-offset: 6px;
-}
-
-a > u,
-button.button > u {
-  text-decoration: none;
+  color: var(--color-brand-600);
+  text-decoration: underline;
 }
 
 /* buttons */
@@ -382,20 +336,17 @@ button.button {
   padding: 0.5em 1.2em;
   font: var(--type-button-2-font);
   letter-spacing: var(--type-button-2-letter-spacing);
-  display: inline-block;
-  box-sizing: border-box;
-  text-decoration: none;
-  border: var(--shape-border-width-3) solid transparent;
-  padding: 5px 3rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25;
   text-align: center;
-  cursor: pointer;
-  color: var(--color-neutral-50);
+  text-decoration: none;
   background-color: var(--color-brand-500);
-  margin: var(--spacing-small) 0;
-  white-space: nowrap;
+  color: var(--color-neutral-50);
+  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: var(--shape-border-radius-3);
+  white-space: nowrap;
 }
 
 main a.button:hover,
@@ -478,10 +429,8 @@ main > .section > div {
   padding: 0 var(--spacing-medium);
 }
 
-@media (width >=600px) {
-  main .section {
-    padding: var(--spacing-medium) var(--spacing-big);
-  }
+main > .section:first-of-type {
+  margin-top: 0;
 }
 
 @media (width >= 900px) {
