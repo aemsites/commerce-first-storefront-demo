@@ -45,7 +45,7 @@ export default async function initializeDropins() {
     flip: 'flip',
     size: 'size',
     preferwebp: 'preferwebp',
-    height: 'height',
+    //height: 'height',
     //width: 'width',
     quality: 'quality',
     smartcrop: 'smartcrop',
