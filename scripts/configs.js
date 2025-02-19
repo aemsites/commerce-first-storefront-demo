@@ -59,7 +59,22 @@ const getConfigForEnvironment = async (environment) => {
     if (!configJSON.ok) {
       throw new Error(`Failed to fetch config for ${env}`);
     }
+
     configJSON = await configJSON.json();
+
+    configJSON.data = [
+      { key: 'commerce-endpoint', value: 'https://na1-ccsaas-service-qa.commerce-core-saas.com/RkqtvKRWGepUBng8J9bYVk/graphql' },
+      { key: 'commerce-core-endpoint', value: 'https://na1-ccsaas-service-qa.commerce-core-saas.com/RkqtvKRWGepUBng8J9bYVk/graphql' },
+      { key: 'commerce-environment-id', value: 'S3p68TS6gjfFTULEvg5prB' },
+      { key: 'commerce-x-api-key', value: '' },
+      { key: 'commerce-customer-group', value: 'b6589fc6ab0dc82cf12099d1c2d40ab994e8410c' },
+      { key: 'commerce.headers.cs.Magento-Environment-Id', value: 'S3p68TS6gjfFTULEvg5prB' },
+      { key: 'commerce.headers.cs.x-api-key', value: '' },
+      { key: 'commerce.headers.cs.Magento-Website-Code', value: 'adobe_store_usa_website' },
+      { key: 'commerce.headers.cs.Magento-Store-Code', value: 'adobe_store' },
+      { key: 'commerce.headers.cs.Magento-Store-View-Code', value: 'adobe_store_usa_storeview' },
+    ];
+
     configJSON[':expiry'] = Math.round(Date.now() / 1000) + 7200;
     window.sessionStorage.setItem(`config:${env}`, JSON.stringify(configJSON));
     return configJSON;
